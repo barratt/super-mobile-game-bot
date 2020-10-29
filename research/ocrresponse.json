@@ -1,0 +1,481 @@
+{
+    "language": "en",
+    "textAngle": 0.0,
+    "orientation": "Up",
+    "regions": [
+        {
+            "boundingBox": "2343,14,444,78",
+            "lines": [
+                {
+                    "boundingBox": "2343,14,444,78",
+                    "words": [
+                        {
+                            "boundingBox": "2343,14,215,78",
+                            "text": "4583.7K"
+                        },
+                        {
+                            "boundingBox": "2687,37,100,36",
+                            "text": "8310"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "36,149,37,31",
+            "lines": [
+                {
+                    "boundingBox": "36,149,37,31",
+                    "words": [
+                        {
+                            "boundingBox": "36,149,37,31",
+                            "text": "18"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "129,36,505,1045",
+            "lines": [
+                {
+                    "boundingBox": "310,36,192,53",
+                    "words": [
+                        {
+                            "boundingBox": "310,36,192,53",
+                            "text": "221,145"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "308,143,80,36",
+                    "words": [
+                        {
+                            "boundingBox": "308,143,80,36",
+                            "text": "227"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "129,374,456,38",
+                    "words": [
+                        {
+                            "boundingBox": "129,374,93,38",
+                            "text": "Ships"
+                        },
+                        {
+                            "boundingBox": "277,375,134,30",
+                            "text": "Officers"
+                        },
+                        {
+                            "boundingBox": "442,375,143,30",
+                            "text": "Factions"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "139,519,458,44",
+                    "words": [
+                        {
+                            "boundingBox": "139,519,45,44",
+                            "text": "O"
+                        },
+                        {
+                            "boundingBox": "211,533,171,24",
+                            "text": "TRITANIUM"
+                        },
+                        {
+                            "boundingBox": "392,553,16,4",
+                            "text": "..."
+                        },
+                        {
+                            "boundingBox": "440,527,68,30",
+                            "text": "03h"
+                        },
+                        {
+                            "boundingBox": "522,527,75,30",
+                            "text": "53m"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "211,639,382,31",
+                    "words": [
+                        {
+                            "boundingBox": "211,645,134,25",
+                            "text": "Tritanium"
+                        },
+                        {
+                            "boundingBox": "355,645,63,25",
+                            "text": "Sto..."
+                        },
+                        {
+                            "boundingBox": "444,640,68,30",
+                            "text": "03h"
+                        },
+                        {
+                            "boundingBox": "525,639,68,31",
+                            "text": "14m"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "176,1001,458,29",
+                    "words": [
+                        {
+                            "boundingBox": "176,1001,107,29",
+                            "text": "Defeat"
+                        },
+                        {
+                            "boundingBox": "294,1001,20,29",
+                            "text": "8"
+                        },
+                        {
+                            "boundingBox": "327,1001,123,29",
+                            "text": "hostiles"
+                        },
+                        {
+                            "boundingBox": "461,1001,32,29",
+                            "text": "of"
+                        },
+                        {
+                            "boundingBox": "504,1001,85,29",
+                            "text": "Level"
+                        },
+                        {
+                            "boundingBox": "601,1001,33,29",
+                            "text": "18"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "175,1046,152,35",
+                    "words": [
+                        {
+                            "boundingBox": "175,1053,32,21",
+                            "text": "or"
+                        },
+                        {
+                            "boundingBox": "217,1046,110,35",
+                            "text": "higher."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "641,375,138,678",
+            "lines": [
+                {
+                    "boundingBox": "641,375,94,30",
+                    "words": [
+                        {
+                            "boundingBox": "641,375,94,30",
+                            "text": "Items"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "729,1022,50,31",
+                    "words": [
+                        {
+                            "boundingBox": "729,1022,50,31",
+                            "text": "GO"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "784,375,147,38",
+            "lines": [
+                {
+                    "boundingBox": "784,375,147,38",
+                    "words": [
+                        {
+                            "boundingBox": "784,375,147,38",
+                            "text": "Refinery"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "1120,31,331,759",
+            "lines": [
+                {
+                    "boundingBox": "1120,31,268,34",
+                    "words": [
+                        {
+                            "boundingBox": "1120,31,94,34",
+                            "text": "[HBE]"
+                        },
+                        {
+                            "boundingBox": "1228,33,160,27",
+                            "text": "Fluffiness:"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "1120,101,330,34",
+                    "words": [
+                        {
+                            "boundingBox": "1120,101,100,34",
+                            "text": "[SBIQ]"
+                        },
+                        {
+                            "boundingBox": "1233,102,217,27",
+                            "text": "OdoQ31Lover:"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "1421,763,30,27",
+                    "words": [
+                        {
+                            "boundingBox": "1421,763,30,27",
+                            "text": "12"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "2458,270,123,313",
+            "lines": [
+                {
+                    "boundingBox": "2458,270,123,30",
+                    "words": [
+                        {
+                            "boundingBox": "2458,270,64,30",
+                            "text": "33d"
+                        },
+                        {
+                            "boundingBox": "2534,270,47,30",
+                            "text": "llh"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "2466,324,101,30",
+                    "words": [
+                        {
+                            "boundingBox": "2466,324,101,30",
+                            "text": "SALE!"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "2463,554,114,29",
+                    "words": [
+                        {
+                            "boundingBox": "2463,554,114,29",
+                            "text": "NEWS"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "2678,270,157,313",
+            "lines": [
+                {
+                    "boundingBox": "2680,270,149,30",
+                    "words": [
+                        {
+                            "boundingBox": "2680,270,56,30",
+                            "text": "19h"
+                        },
+                        {
+                            "boundingBox": "2749,270,80,30",
+                            "text": "48m"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "2680,324,147,30",
+                    "words": [
+                        {
+                            "boundingBox": "2680,324,147,30",
+                            "text": "EVENTS"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "2678,553,157,30",
+                    "words": [
+                        {
+                            "boundingBox": "2678,553,79,30",
+                            "text": "03m"
+                        },
+                        {
+                            "boundingBox": "2771,553,64,30",
+                            "text": "OSS"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "1999,1024,30,27",
+            "lines": [
+                {
+                    "boundingBox": "1999,1024,30,27",
+                    "words": [
+                        {
+                            "boundingBox": "1999,1024,30,27",
+                            "text": "12"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "2436,889,287,179",
+            "lines": [
+                {
+                    "boundingBox": "2584,889,138,31",
+                    "words": [
+                        {
+                            "boundingBox": "2584,889,69,31",
+                            "text": "05d"
+                        },
+                        {
+                            "boundingBox": "2664,889,58,31",
+                            "text": "12h"
+                        }
+                    ]
+                },
+                {
+                    "boundingBox": "2436,1030,287,38",
+                    "words": [
+                        {
+                            "boundingBox": "2436,1030,125,38",
+                            "text": "Home"
+                        },
+                        {
+                            "boundingBox": "2572,1031,151,37",
+                            "text": "Station"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "76,1383,134,30",
+            "lines": [
+                {
+                    "boundingBox": "76,1383,134,30",
+                    "words": [
+                        {
+                            "boundingBox": "76,1383,134,30",
+                            "text": "Alliance"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "324,1383,94,30",
+            "lines": [
+                {
+                    "boundingBox": "324,1383,94,30",
+                    "words": [
+                        {
+                            "boundingBox": "324,1383,94,30",
+                            "text": "Inbox"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "1045,1379,100,27",
+            "lines": [
+                {
+                    "boundingBox": "1045,1379,100,27",
+                    "words": [
+                        {
+                            "boundingBox": "1045,1379,100,27",
+                            "text": "HOME"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "1277,1398,100,27",
+            "lines": [
+                {
+                    "boundingBox": "1277,1398,100,27",
+                    "words": [
+                        {
+                            "boundingBox": "1277,1398,100,27",
+                            "text": "HOME"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "1509,1398,101,27",
+            "lines": [
+                {
+                    "boundingBox": "1509,1398,101,27",
+                    "words": [
+                        {
+                            "boundingBox": "1509,1398,101,27",
+                            "text": "HOME"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "1684,1396,216,30",
+            "lines": [
+                {
+                    "boundingBox": "1684,1396,216,30",
+                    "words": [
+                        {
+                            "boundingBox": "1684,1396,179,30",
+                            "text": "DRYDOCK"
+                        },
+                        {
+                            "boundingBox": "1876,1396,24,30",
+                            "text": "D"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "2455,1382,124,46",
+            "lines": [
+                {
+                    "boundingBox": "2455,1382,124,46",
+                    "words": [
+                        {
+                            "boundingBox": "2455,1382,124,46",
+                            "text": "Intur(or"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "boundingBox": "2689,1388,130,38",
+            "lines": [
+                {
+                    "boundingBox": "2689,1388,130,38",
+                    "words": [
+                        {
+                            "boundingBox": "2689,1388,130,38",
+                            "text": "System"
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

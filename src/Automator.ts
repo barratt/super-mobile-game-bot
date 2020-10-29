@@ -7,9 +7,12 @@ import FormData from 'form-data'
 
 import gm from "gm"; 
 import collission from "./utils/collission-detection";
+import { Region } from "./Models/Region";
 export class Automator {
     cognative;
     bridge : BridgeInterface;
+    lastScreenshot;
+    lastOcr;
 
     constructor(bridge) {
         this.bridge = bridge;
@@ -26,7 +29,7 @@ export class Automator {
         });
     }
 
-    async findTextInRegion(x1, y1, x2, y2): Promise<string> {
+    async takeScreenshot() {
         // Take screenshot or get current screen;
         let screenshot = await this.bridge.takeScreenshot();
 
@@ -37,9 +40,14 @@ export class Automator {
                 return resolve(buf);
             });
         });
+        
+        this.lastScreenshot = compressed;
+        return compressed;
+    }
 
+    async runOcr() {
         let data = new FormData();
-        data.append('file', compressed, "image.png");
+        data.append('file', this.lastScreenshot, "image.png");
 
         let ocr = await this.cognative.post(`vision/v2.0/ocr`, data, {
             headers: {
@@ -47,21 +55,22 @@ export class Automator {
             }
         });
 
+        this.lastOcr = ocr.data;
+        return this.lastOcr;
+    }
+
+    async findTextInRegion(region: { x1: number, y1: number, x2: number, y2: number}): Promise<string> {
         let wordsInRegion = [];
-        for (let region of ocr.data.regions) {
+        for (let region of this.lastOcr.regions) {
             for (let line of region.lines) {
                 for (let word of line.words) {
                     let boundingBox = word.boundingBox.split(','); // x1,y1,x2,y2
-                    let isWordInRegion = collission.contains({
-                            x1, y1,
-                            x2, y2,
-                        }, {
-                            x1: boundingBox[0],
-                            y1: boundingBox[1],
-                            x2: boundingBox[2],
-                            y2: boundingBox[3],
-                        }
-                    );
+                    let isWordInRegion = collission.contains(region, {
+                        x1: boundingBox[0],
+                        y1: boundingBox[1],
+                        x2: parseInt(boundingBox[0])+parseInt(boundingBox[2]),
+                        y2: parseInt(boundingBox[1])+parseInt(boundingBox[3]),
+                    });
 
                     if (isWordInRegion) {
                         wordsInRegion.push(word.text)
@@ -73,4 +82,27 @@ export class Automator {
         // We have a list of regions where we found text, lets see if one matches ours accurately
         return wordsInRegion.join(' ');
     }
+
+    async findRegionForText(text: string): Promise<Region> {
+        for (let region of this.lastOcr.regions) {
+            for (let line of region.lines) {
+                for (let word of line.words) {
+                    if (word.text != text) continue;
+
+                    let boundingBox = word.boundingBox.split(','); // x1,y1,x2,y2
+                    return {
+                        x1: boundingBox[0],
+                        y1: boundingBox[1],
+                        x2: parseInt(boundingBox[0])+parseInt(boundingBox[2]),
+                        y2: parseInt(boundingBox[1])+parseInt(boundingBox[3]),
+                    }
+                }
+            }
+        }
+
+        return null;
+    }
+
+
+    // TODO: Make a reverse of findTextInRegion, a findRegionForText where it returns region for a piece of text
 }

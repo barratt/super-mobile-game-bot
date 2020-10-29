@@ -43,9 +43,21 @@ async function main() {
     
     await sleep(20 * 1000); // Wait for it to load (TODO: Make a better system for this, search for something to exist on the screen)
 
-    console.log("App started collecting rewards");
+    console.log("App started");
     // Collect dailies
-    // await bot.collectChestRewards();
+
+    await bot.takeScreenshot();
+    // See if we can see something familiar first if not die.
+    
+    // Run the OCR on the last screenshot 
+    await bot.runOcr();
+    // bot.lastOcr = require('../research/ocrresponse.json');
+
+    await bot.startRefinery();
+    // We have to see the screen
+
+
+    // Get the player score
     await bot.getPlayerScore();
 
     console.log("done");
