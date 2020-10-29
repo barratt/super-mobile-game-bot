@@ -1,0 +1,41 @@
+bluestacks does tweaks to android emulator and supports multi-instance and adb
+
+We make a device runner that just uses ADB with take SS?
+
+adb connect localhost:5555 works for bluestacks?
+
+
+These co-ordinates work at screen size: 1280,720
+
+1080, 640 interior/exterior
+
+580, 630 Ship A (1 ship unlocked)
+
+370,520 Mission Collect / Go
+
+
+2880 × 1440
+
+
+2.25 x x2 height
+Pixel 2XL:
+Mission collect / go 830, 1280
+
+2500, 1300
+
+
+Connect via wifi:
+Connect via cable first.
+
+adb tcpip 5555 # Restart in TCP
+adb shell "ip addr show wlan0 | grep -e wlan0$ | cut -d\" \" -f 6 | cut -d/ -f 1" #Get Phone IP
+#Disconnect phone
+adb connect 192.168.0.34:5555 #Connect over wifi
+
+
+Azure OCR max is:
+Supported image formats: JPEG, PNG, GIF, BMP.
+Image file size must be less than 4MB.
+Image dimensions must be between 50 x 50 and 4200 x 4200 pixels, and the image cannot be larger than 10 megapixels.
+
+convert screen.png -define jpeg:extent=2048kb screen.jpg
