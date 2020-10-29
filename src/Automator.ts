@@ -31,6 +31,7 @@ export class Automator {
 
     async takeScreenshot() {
         // Take screenshot or get current screen;
+        console.log("Taking screenshot");
         let screenshot = await this.bridge.takeScreenshot();
 
         // Use gm to reisize it down
@@ -40,12 +41,14 @@ export class Automator {
                 return resolve(buf);
             });
         });
+        console.log("Compressed screenshot");
         
         this.lastScreenshot = compressed;
         return compressed;
     }
 
     async runOcr() {
+        console.log("Sending last screenshot to Azure");
         let data = new FormData();
         data.append('file', this.lastScreenshot, "image.png");
 
@@ -55,17 +58,18 @@ export class Automator {
             }
         });
 
+        console.log("Got result");
         this.lastOcr = ocr.data;
         return this.lastOcr;
     }
 
-    async findTextInRegion(region: { x1: number, y1: number, x2: number, y2: number}): Promise<string> {
+    async findTextInRegion(needleRegion: { x1: number, y1: number, x2: number, y2: number}): Promise<string> {
         let wordsInRegion = [];
         for (let region of this.lastOcr.regions) {
             for (let line of region.lines) {
                 for (let word of line.words) {
                     let boundingBox = word.boundingBox.split(','); // x1,y1,x2,y2
-                    let isWordInRegion = collission.contains(region, {
+                    let isWordInRegion = collission.contains(needleRegion, {
                         x1: boundingBox[0],
                         y1: boundingBox[1],
                         x2: parseInt(boundingBox[0])+parseInt(boundingBox[2]),
@@ -102,7 +106,4 @@ export class Automator {
 
         return null;
     }
-
-
-    // TODO: Make a reverse of findTextInRegion, a findRegionForText where it returns region for a piece of text
 }

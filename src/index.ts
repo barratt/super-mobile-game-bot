@@ -41,24 +41,37 @@ async function main() {
       console.log("Couldn't start app");
     }
     
-    await sleep(20 * 1000); // Wait for it to load (TODO: Make a better system for this, search for something to exist on the screen)
+    let runBotInfinitely = true;
 
-    console.log("App started");
-    // Collect dailies
+    while (true) {
+      // See if we can see something familiar first if not die.
+      
+      // TODO: Speed this up
+      // Take screenshot
+      await bot.takeScreenshot();
+      // bot.lastScreenshot = require('fs').readFileSync('../research/android_scripts/screen2.png');
 
-    await bot.takeScreenshot();
-    // See if we can see something familiar first if not die.
-    
-    // Run the OCR on the last screenshot 
-    await bot.runOcr();
-    // bot.lastOcr = require('../research/ocrresponse.json');
+      // Run the OCR on the last screenshot 
+      // await bot.runOcr();
+      bot.lastOcr = require('../research/ocrresponse.json');
 
-    await bot.startRefinery();
-    // We have to see the screen
+      if (await bot.isOnGameHomeScreen()) {
+        await bot.startRefinery();
+        await bot.helpAlliance();
+        await bot.getPlayerScore();
+      } else {
+        console.log("Bot not on home screen, Did something go wrong or am I just loading?");
+      }
+      
+      await sleep(5000);
+
+      if (!runBotInfinitely) {
+        break;
+      }
+    }
 
 
     // Get the player score
-    await bot.getPlayerScore();
 
     console.log("done");
   } catch (e) {
