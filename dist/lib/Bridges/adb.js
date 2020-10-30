@@ -77,7 +77,7 @@ var ADB = /** @class */ (function () {
                         return [4 /*yield*/, await_sleep_1.default(durationMs + 100)];
                     case 2:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2 /*return*/, true];
                 }
             });
         });
@@ -91,24 +91,23 @@ var ADB = /** @class */ (function () {
                         return [4 /*yield*/, this.client.shell("input tap " + x + " " + y)];
                     case 1:
                         _a.sent();
-                        return [2 /*return*/];
+                        return [2 /*return*/, true];
                 }
             });
         });
     };
     ADB.prototype.startApp = function (packageIdentifier, mainActivity) {
         return __awaiter(this, void 0, void 0, function () {
-            var client, _a, appPackage, appActivity, checkAttempts;
-            return __generator(this, function (_b) {
-                switch (_b.label) {
+            var client, isOpen, checkAttempts;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
                     case 0:
                         client = this.client;
-                        console.log("Checking if already focused");
-                        return [4 /*yield*/, client.getFocusedPackageAndActivity()];
+                        return [4 /*yield*/, this.checkAppOpen(packageIdentifier, mainActivity)];
                     case 1:
-                        _a = _b.sent(), appPackage = _a.appPackage, appActivity = _a.appActivity;
-                        if (appPackage == packageIdentifier && appActivity == mainActivity) {
-                            console.log("App already focused!");
+                        isOpen = _a.sent();
+                        if (isOpen) {
+                            console.log("App already open!");
                             return [2 /*return*/, true];
                         }
                         console.log("Starting " + packageIdentifier + "/" + mainActivity);
@@ -117,15 +116,15 @@ var ADB = /** @class */ (function () {
                                 activity: mainActivity,
                             })];
                     case 2:
-                        _b.sent();
+                        _a.sent();
                         checkAttempts = 5;
-                        _b.label = 3;
+                        _a.label = 3;
                     case 3: return [4 /*yield*/, client.getPIDsByName(packageIdentifier)];
                     case 4:
-                        if (!((_b.sent()).length == 0 && checkAttempts > 5)) return [3 /*break*/, 6];
+                        if (!((_a.sent()).length == 0 && checkAttempts > 5)) return [3 /*break*/, 6];
                         return [4 /*yield*/, await_sleep_1.default(2000)];
                     case 5:
-                        _b.sent();
+                        _a.sent();
                         console.log("Can't find running app yet, waiting.");
                         checkAttempts--;
                         return [3 /*break*/, 3];
@@ -134,7 +133,26 @@ var ADB = /** @class */ (function () {
             });
         });
     };
-    ADB.prototype.checkAppOpen = function () {
+    ADB.prototype.checkAppOpen = function (packageIdentifier, mainActivity) {
+        return __awaiter(this, void 0, void 0, function () {
+            var client, _a, appPackage, appActivity;
+            return __generator(this, function (_b) {
+                switch (_b.label) {
+                    case 0:
+                        client = this.client;
+                        console.log("Checking if already focused");
+                        return [4 /*yield*/, client.getFocusedPackageAndActivity()];
+                    case 1:
+                        _a = _b.sent(), appPackage = _a.appPackage, appActivity = _a.appActivity;
+                        console.log("Checking for focus: " + appPackage + " " + appActivity);
+                        console.log("Looking for: " + packageIdentifier + " " + mainActivity);
+                        if (appPackage == packageIdentifier && appActivity == mainActivity) {
+                            return [2 /*return*/, true];
+                        }
+                        return [2 /*return*/, false];
+                }
+            });
+        });
     };
     ADB.prototype.unlockDevice = function (passCode) {
         return __awaiter(this, void 0, void 0, function () {
@@ -184,6 +202,21 @@ var ADB = /** @class */ (function () {
                         _b.sent();
                         buffer = fs.readFileSync(path);
                         return [2 /*return*/, buffer];
+                }
+            });
+        });
+    };
+    ADB.prototype.screenResolution = function () {
+        return __awaiter(this, void 0, void 0, function () {
+            var screenSize;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.client.shell("wm size")];
+                    case 1:
+                        screenSize = (_a.sent()).replace('Physical size: ', '').split('x');
+                        // This assumes portrait mode.
+                        // I'm inverting this for now because we assume its always landscape.
+                        return [2 /*return*/, { width: screenSize[1], height: screenSize[0] }];
                 }
             });
         });

@@ -1,13 +1,11 @@
-const fs = require('fs')
+const fs = require('fs');
 // const concat = require('concat-stream')
-
-const deviceId = process.env.DEVICE_ID;
-
 import "dotenv/config";
 import sleep from "await-sleep";
 import { StarfleetCommandBot } from "./Bots/StarfleetCommand";
 import { ADB } from "./lib/Bridges/adb";
 
+const deviceId = process.env.DEVICE_ID;
 
 console.log("What");
 

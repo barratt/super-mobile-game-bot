@@ -4,6 +4,7 @@ const fs = require('fs');
 
 import AppiumADB from 'appium-adb';
 import sleep from "await-sleep";
+import { DeviceScreen } from "../../Models/DeviceScreen";
 
 export class ADB implements BridgeInterface {
     client;
@@ -60,6 +61,8 @@ export class ADB implements BridgeInterface {
     }
 
     async checkAppOpen(packageIdentifier: string, mainActivity: string) {
+        const { client } = this;
+
         console.log("Checking if already focused");
         const { appPackage, appActivity } = await client.getFocusedPackageAndActivity();
         
@@ -106,7 +109,10 @@ export class ADB implements BridgeInterface {
         return (buffer as Buffer);
     }
 
-    async screenResolution() {
-
+    async screenResolution(): Promise<DeviceScreen> {
+        let screenSize = (await this.client.shell(`wm size`)).replace('Physical size: ', '').split('x');
+        // This assumes portrait mode.
+        // I'm inverting this for now because we assume its always landscape.
+        return { width: screenSize[1], height: screenSize[0] };
     }
 }
