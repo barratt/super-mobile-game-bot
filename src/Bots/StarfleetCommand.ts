@@ -217,8 +217,8 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
 
         const chests = {
             "MIN10": { x1: 600, y1: 1080, x2: 900, y2: 1165 }, // Green claim button or available in
-            "HOUR4": { x1: 1030, y1: 1080, x2: 1500, y2: 1165 },
-            "HOUR24": { x1: 1700, y1: 1080, x2: 2200, y2: 1165 },
+            "HOUR4": { x1: 1030, y1: 1080, x2: 1600, y2: 1165 },
+            "HOUR24": { x1: 1700, y1: 1080, x2: 2300, y2: 1165 },
         }
 
         let min10Text= await this.findTextInRegion(chests.MIN10, this.scenes.GIFTS_VIEW);
