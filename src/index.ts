@@ -33,37 +33,37 @@ async function main() {
     // console.timeEnd('ss');
     // fs.writeFileSync('test.png', ss);
 
-    console.log("starting app");
-    let started = await bridge.startApp(bot.androidPackageIdentifier, bot.androidMainActivity);
-    if (started) {
-      console.log("App started! Waiting for app to load");
-    } else {
-      console.log("Couldn't start app");
-    }
-    
     let runBotInfinitely = true;
 
     while (true) {
       // See if we can see something familiar first if not die.
+      console.log("starting app");
+      let started = await bridge.startApp(bot.androidPackageIdentifier, bot.androidMainActivity);
+      if (started) {
+        console.log("App started! Waiting for app to load");
+      } else {
+        console.log("Couldn't start app");
+      }
       
       // TODO: Speed this up
       // Take screenshot
-      await bot.takeScreenshot();
+      await bot.takeScreenshot("main");
       // bot.lastScreenshot = require('fs').readFileSync('../research/android_scripts/screen2.png');
 
       // Run the OCR on the last screenshot 
-      // await bot.runOcr();
-      bot.lastOcr = require('../research/ocrresponse.json');
+      await bot.runOcr("main");
+      // bot.lastOcr = require('../research/ocrresponse.json');
 
       if (await bot.isOnGameHomeScreen()) {
-        await bot.startRefinery();
-        await bot.helpAlliance();
-        await bot.getPlayerScore();
+        await bot.claimGifts();
+        // await bot.startRefinery();
+        // await bot.helpAlliance();
+        // await bot.getPlayerScore();
       } else {
         console.log("Bot not on home screen, Did something go wrong or am I just loading?");
       }
       
-      await sleep(5000);
+      await sleep(15 * 1000);
 
       if (!runBotInfinitely) {
         break;

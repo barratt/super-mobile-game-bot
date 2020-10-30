@@ -20,7 +20,14 @@ export class ADB implements BridgeInterface {
         return null;
     }
 
-    swipe(xStart, yStart, xStop, yStop, durationMs) {}
+    async swipe(xStart, yStart, xStop, yStop, durationMs) {
+
+        console.log(`Swiping (${xStart}, ${yStart})`);
+        await this.client.shell(`input touchscreen swipe ${xStart} ${yStart} ${xStop} ${yStop} ${durationMs}`);
+        await sleep(durationMs + 100);
+
+        return;
+    }
     async tap(x, y) {
         console.log(`Tapping (${x}, ${y})`);
         await this.client.shell(`input tap ${x} ${y}`);

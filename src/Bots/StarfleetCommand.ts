@@ -35,6 +35,11 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX: { x1: 2560, y1: 395, x2: 2615, y2: 550 },
     }
 
+    scenes = {
+        MAIN_VIEW: "main",
+        GIFTS_VIEW: "gifts",
+    }
+
     constructor(bridge: BridgeInterface) {
         super(bridge);
         this.bridge = bridge;
@@ -54,7 +59,7 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
 
     async getPlayerScore() : Promise<number> {
         console.log("Getting score");
-        let scoreString = await this.findTextInRegion(this.regions.PLAYER_SCORE_BOUNDING_BOX);
+        let scoreString = await this.findTextInRegion(this.regions.PLAYER_SCORE_BOUNDING_BOX, this.scenes.MAIN_VIEW);
         let score = parseInt(scoreString.replace(/,/gmi, '').trim());
 
         if (isNaN(score)) {
@@ -83,7 +88,7 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
     async helpAlliance() {
         console.log("Checking for alliance help");
 
-        let notification = await this.findTextInRegion(this.regions.ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX);
+        let notification = await this.findTextInRegion(this.regions.ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX, this.scenes.MAIN_VIEW);
         if (notification.length == 0) {
             // No refinery today.
             console.log("Alliance doesn't need help!");
@@ -101,7 +106,7 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         // TODO: Make this smarter, find where the refinery buttons are instead.
 
         // Check if refinery is unlocked
-        let refineryUnlocked = (await this.findTextInRegion(this.regions.REFINERY_NOTIFICATION_BOUNDING_BOX)).toLowerCase();
+        let refineryUnlocked = (await this.findTextInRegion(this.regions.REFINERY_NOTIFICATION_BOUNDING_BOX, this.scenes.MAIN_VIEW)).toLowerCase();
         if (refineryUnlocked == "refinery") {
             console.log("Yep refinery unlocked")
         } else {
@@ -110,7 +115,7 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         }
 
         // Check if refinery is good to go.
-        let notification = await this.findTextInRegion(this.regions.REFINERY_NOTIFICATION_BOUNDING_BOX);
+        let notification = await this.findTextInRegion(this.regions.REFINERY_NOTIFICATION_BOUNDING_BOX, this.scenes.MAIN_VIEW);
         if (notification.length == 0) {
             // No refinery today.
             console.log("Refinery already done!");
@@ -145,5 +150,45 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         await this.tapLocation(locations.TOP_LEFT_BACK);
 
         console.log("We're all done collecting chest rewards");
+    }
+
+    async claimGifts() {
+        console.log("claiming gifts");
+        let box = await this.findRegionForText("CLAIM");
+        await this.tapLocation([ (box.x1+box.x2)/2, (box.y1+box.y2)/2 ]);
+        // Wait until we can see it? That takes screenshot service which costs!
+        await sleep(2000);
+        
+        await this.bridge.swipe(1850, 620, 1100, 620, 250); // The current qame has 2 promo packs
+
+        await sleep(1000);
+        console.log("Taking screenshot of gifts screen");
+
+        // TODO: Take screenshot click claim?
+        await this.takeScreenshot(this.scenes.GIFTS_VIEW);
+        await this.runOcr(this.scenes.GIFTS_VIEW);
+
+        const chests = {
+            "MIN10": { x1: 600, y1: 1080, x2: 900, y2: 1165 }, // Green claim button or available in
+            "HOUR4": { x1: 1030, y1: 1080, x2: 0, y2: 0 },
+            "HOUR24": { x1: 0, y1: 0, x2: 0, y2: 0 },
+        }
+
+        let min10Text= await this.findTextInRegion(chests.MIN10, this.scenes.GIFTS_VIEW);
+
+        if (min10Text == "CLAIM") {
+            await this.tapLocation([ (chests.MIN10.x1 + chests.MIN10.x2) / 2, (chests.MIN10.y1 + chests.MIN10.y2) / 2 ]);
+        }
+
+        await sleep(2000);
+        await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
+
+        // This returns us back to the gifts screen, lets swipe and check for 4h
+
+        await sleep(2000);
+        console.log("Done collecting gifts");
+
+        // Now we can select claim on the others?
+
     }
 }
