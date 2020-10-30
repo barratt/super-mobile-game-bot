@@ -182,11 +182,27 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
 
         await sleep(2000);
         await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
+        await sleep(2000);
 
         // This returns us back to the gifts screen, lets swipe and check for 4h
+        let hour4Text = await this.findTextInRegion(chests.HOUR4, this.scenes.GIFTS_VIEW);
+        if (hour4Text == "CLAIM") {
+            await this.tapLocation([ (chests.HOUR4.x1 + chests.HOUR4.x2) / 2, (chests.HOUR4.y1 + chests.HOUR4.y2) / 2 ]);
+            await sleep(2000);
+            await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
+            await sleep(2000);
+        }
 
-        await sleep(2000);
-        console.log("Done collecting gifts");
+        let hour24Text = await this.findTextInRegion(chests.HOUR24, this.scenes.GIFTS_VIEW);
+        if (hour24Text == "CLAIM") {
+            await this.tapLocation([ (chests.HOUR24.x1 + chests.HOUR24.x2) / 2, (chests.HOUR24.y1 + chests.HOUR24.y2) / 2 ]);
+            await sleep(2000);
+            await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
+            await sleep(2000);
+        }
+
+        await this.tapLocation(this.locations.TOP_LEFT_BACK);
+        console.log("Done collecting gifts"); 
 
         // Now we can select claim on the others?
 

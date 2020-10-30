@@ -63,7 +63,7 @@ async function main() {
         console.log("Bot not on home screen, Did something go wrong or am I just loading?");
       }
       
-      await sleep(15 * 1000);
+      await sleep(60 * 1000);
 
       if (!runBotInfinitely) {
         break;
