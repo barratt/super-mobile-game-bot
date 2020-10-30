@@ -27,7 +27,9 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         ALLIANCE_HELP: [ 2500, 500 ],
         ALLIANCE_HELP_ALL: [ 1500, 1350 ],
 
-        MISSION_SHORTCUT: [ 707, 1038 ]
+        MISSION_SHORTCUT: [ 707, 1038 ],
+
+        INTERIOR_BUTTON: [ 2500, 1300 ]
     }
 
     regions = {
@@ -282,6 +284,10 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
     }
 
     async collectGenerators() {
-
+        await this.tapLocation(this.locations.INTERIOR_BUTTON);
+        await sleep(5000);
+        // TODO: Collect parasteel
+        // TODO: Collect tritanium
+        // TODO: Collect dilithium
     }
 }
