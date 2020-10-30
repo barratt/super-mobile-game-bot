@@ -2,7 +2,7 @@ node_modules
 .env
 
 # Ignore future builds of dist, let github actions take care of this.
-
+dist/
 
 lastscreenshot.jpg
 lastscreenshot.png
