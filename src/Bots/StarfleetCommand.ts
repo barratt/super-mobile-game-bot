@@ -177,28 +177,34 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         let min10Text= await this.findTextInRegion(chests.MIN10, this.scenes.GIFTS_VIEW);
 
         if (min10Text == "CLAIM") {
+            console.log("Claiming 10 minute chest");
             await this.tapLocation([ (chests.MIN10.x1 + chests.MIN10.x2) / 2, (chests.MIN10.y1 + chests.MIN10.y2) / 2 ]);
+            await sleep(2000);
+            await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
+            await sleep(2000);
+        } else {
+            console.log("10 min chest not available");
         }
-
-        await sleep(2000);
-        await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
-        await sleep(2000);
 
         // This returns us back to the gifts screen, lets swipe and check for 4h
         let hour4Text = await this.findTextInRegion(chests.HOUR4, this.scenes.GIFTS_VIEW);
         if (hour4Text == "CLAIM") {
+            console.log("Claiming 4 hour chest");
             await this.tapLocation([ (chests.HOUR4.x1 + chests.HOUR4.x2) / 2, (chests.HOUR4.y1 + chests.HOUR4.y2) / 2 ]);
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
             await sleep(2000);
+            console.log("4h chest not available");
         }
 
         let hour24Text = await this.findTextInRegion(chests.HOUR24, this.scenes.GIFTS_VIEW);
         if (hour24Text == "CLAIM") {
+            console.log("Claiming 24 hour chest");
             await this.tapLocation([ (chests.HOUR24.x1 + chests.HOUR24.x2) / 2, (chests.HOUR24.y1 + chests.HOUR24.y2) / 2 ]);
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
             await sleep(2000);
+            console.log("24h chest not available");
         }
 
         await this.tapLocation(this.locations.TOP_LEFT_BACK);
