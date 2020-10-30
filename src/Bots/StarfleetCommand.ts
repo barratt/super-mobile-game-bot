@@ -4,7 +4,7 @@ import sleep from "await-sleep";
 import { Automator } from "../Automator";
 
 // TODO: Remove screen resolution dependency 
-export class StarfleetCommandBot extends Automator implements BotInterface {
+export class StarFleetCommandBot extends Automator implements BotInterface {
     iosSupported: false;
     androidSupported: true;
 
