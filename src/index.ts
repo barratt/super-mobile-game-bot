@@ -2,7 +2,7 @@ const fs = require('fs');
 // const concat = require('concat-stream')
 import "dotenv/config";
 import sleep from "await-sleep";
-import { StarfleetCommandBot } from "./Bots/StarfleetCommand";
+import { StarFleetCommandBot } from "./Bots/StarfleetCommand";
 import { ADB } from "./lib/Bridges/adb";
 
 const deviceId = process.env.DEVICE_ID;
@@ -22,7 +22,7 @@ async function main() {
       console.log("Device unlocked!");
     }
 
-    const bot = new StarfleetCommandBot(bridge);
+    const bot = new StarFleetCommandBot(bridge);
     
     // See if we can see something familiar first if not die.
     console.log("starting app");
