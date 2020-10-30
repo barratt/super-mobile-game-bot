@@ -70,8 +70,8 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             await this.runOcr("main");
             // this.lastOcr = require('../research/ocrresponse.json');
 
-            let isOnHomescreen = await this.isOnGameHomeScreen();
-            if (isOnHomescreen)
+            let isOnHomeScreen = await this.isOnGameHomeScreen();
+            if (isOnHomeScreen)
                 break;
 
             // We're not. Lets wait.
