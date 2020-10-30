@@ -1,7 +1,7 @@
 const fs = require('fs')
 // const concat = require('concat-stream')
 
-const deviceId = "192.168.0.34:5555"
+const deviceId = process.env.DEVICE_ID;
 
 import "dotenv/config";
 import sleep from "await-sleep";
@@ -25,55 +25,19 @@ async function main() {
     }
 
     const bot = new StarfleetCommandBot(bridge);
-
-    // bot.start();
-    // console.log("Taking screenshot to test.png");
-    // console.time('ss');
-    // let ss = await bridge.takeScreenshot();
-    // console.timeEnd('ss');
-    // fs.writeFileSync('test.png', ss);
-
-    let runBotInfinitely = true;
-
-    while (true) {
-      // See if we can see something familiar first if not die.
-      console.log("starting app");
-      let started = await bridge.startApp(bot.androidPackageIdentifier, bot.androidMainActivity);
-      if (started) {
-        console.log("App started! Waiting for app to load");
-      } else {
-        console.log("Couldn't start app");
-      }
-      
-      // TODO: Speed this up
-      // Take screenshot
-      await bot.takeScreenshot("main");
-      // bot.lastScreenshot = require('fs').readFileSync('../research/android_scripts/screen2.png');
-
-      // Run the OCR on the last screenshot 
-      await bot.runOcr("main");
-      // bot.lastOcr = require('../research/ocrresponse.json');
-
-      if (await bot.isOnGameHomeScreen()) {
-        await bot.claimGifts();
-        await bot.startRefinery();
-        await bot.helpAlliance();
-        await bot.getPlayerScore();
-      } else {
-        console.log("Bot not on home screen, Did something go wrong or am I just loading?");
-      }
-      
-      await sleep(60 * 1000);
-
-      if (!runBotInfinitely) {
-        break;
-      }
+    
+    // See if we can see something familiar first if not die.
+    console.log("starting app");
+    let appStarted = await bridge.startApp(bot.androidPackageIdentifier, bot.androidMainActivity);
+    if (appStarted) {
+      console.log("App started! Waiting for app to load");
+    } else {
+      console.log("Couldn't start app");
     }
 
-
-    // Get the player score
-
-    console.log("done");
+    console.log("Starting bot")
+    await bot.start(); // This is a promise and stops when the bot stops. If it stops.
+    console.log("Bot all done.");
   } catch (e) {
     console.error(e);
   }

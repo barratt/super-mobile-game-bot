@@ -20,34 +20,30 @@ export class ADB implements BridgeInterface {
         return null;
     }
 
-    async swipe(xStart, yStart, xStop, yStop, durationMs) {
+    async swipe(xStart, yStart, xStop, yStop, durationMs): Promise<boolean> {
 
         console.log(`Swiping (${xStart}, ${yStart})`);
         await this.client.shell(`input touchscreen swipe ${xStart} ${yStart} ${xStop} ${yStop} ${durationMs}`);
         await sleep(durationMs + 100);
 
-        return;
+        return true;
     }
-    async tap(x, y) {
+    async tap(x, y): Promise<boolean> {
         console.log(`Tapping (${x}, ${y})`);
         await this.client.shell(`input tap ${x} ${y}`);
+        return true;
     }
 
     async startApp(packageIdentifier: string, mainActivity: string) {
         const { client } = this;
 
-        console.log("Checking if already focused");
-        const { appPackage, appActivity } = await client.getFocusedPackageAndActivity();
-        
-        console.log(`Checking for focus: ${appPackage} ${appActivity}`);
-        console.log(`Looking for: ${packageIdentifier} ${mainActivity}`);
-        if (appPackage == packageIdentifier && appActivity == mainActivity) {
-            console.log("App already focused!");
+        let isOpen = await this.checkAppOpen(packageIdentifier, mainActivity);
+        if (isOpen) {
+            console.log("App already open!");
             return true;
         }
 
         console.log(`Starting ${packageIdentifier}/${mainActivity}`);
-
         await client.startApp({
             pkg: packageIdentifier,
             activity: mainActivity,
@@ -63,8 +59,17 @@ export class ADB implements BridgeInterface {
         return checkAttempts > 0;
     }
 
-    checkAppOpen() {
+    async checkAppOpen(packageIdentifier: string, mainActivity: string) {
+        console.log("Checking if already focused");
+        const { appPackage, appActivity } = await client.getFocusedPackageAndActivity();
+        
+        console.log(`Checking for focus: ${appPackage} ${appActivity}`);
+        console.log(`Looking for: ${packageIdentifier} ${mainActivity}`);
+        if (appPackage == packageIdentifier && appActivity == mainActivity) {
+            return true;
+        }
 
+        return false;
     }
 
     async unlockDevice(passCode: string) {
@@ -99,5 +104,9 @@ export class ADB implements BridgeInterface {
         let buffer = fs.readFileSync(path);
 
         return (buffer as Buffer);
+    }
+
+    async screenResolution() {
+
     }
 }

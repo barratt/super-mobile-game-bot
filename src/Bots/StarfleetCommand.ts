@@ -44,21 +44,59 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         GIFTS_VIEW: "gifts",
     }
 
+    designedFor = { width: 2880, height: 1440 };
+
     constructor(bridge: BridgeInterface) {
-        super(bridge);
+        super(bridge); // ?? This seems wrong 
         this.bridge = bridge;
     }
 
-    start() {
-        console.log("StarFleet command bot running");
+    async start() {
+        console.log("StarFleet command bot start action");
 
-        // TODO: Check if game is open
-        // TODO: Check if dailies are collected
-        // TODO: Check if refinery is done
+        console.log("Initializing bot")
+        await this.init();
+        console.log("Bot ready");
+
+        // Lets see whats happening.
+        await this.takeScreenshot("main");
+        // this.lastScreenshot = require('fs').readFileSync('../research/android_scripts/screen2.png');
+  
+        // Run the OCR on the last screenshot 
+        await this.runOcr("main");
+        // this.lastOcr = require('../research/ocrresponse.json');
+        
+        const maxAttempts = 5;
+
+        let checkOnScreen = maxAttempts;
+        while (checkOnScreen > 0) {
+            let isOnHomescreen = await this.isOnGameHomeScreen();
+            if (isOnHomescreen)
+                break;
+
+            // We're not. Lets wait.
+            checkOnScreen--;
+            console.log(`Home screen not detected, waiting (Attempt ${maxAttempts-checkOnScreen}/${maxAttempts})`)
+            await sleep(2000);
+        }
+
+        if (checkOnScreen == 0) {
+            throw new Error("Unable to start starfleet bot. Homescreen not detected");
+        }
+
+        await this.claimGifts();
+        await this.startRefinery();
+        await this.helpAlliance();
+        await this.getPlayerScore();
+
+        return true;
     }
 
     stop() {
-
+        console.log("StarFleet command bot stopping!");
+        // Somehow stop the start method?
+        console.log("StarFleet command unable to stop!");
+        return false;
     }
 
     async getPlayerScore() : Promise<number> {
@@ -72,11 +110,6 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
     
         console.log(`Found score: ${score}`);
         return score;
-    }
-
-    async tapLocation(location) {
-        const { bridge } = this;
-        return await bridge.tap(location[0], location[1])
     }
 
     async isOnGameHomeScreen() {
@@ -171,7 +204,7 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         // Wait until we can see it? That takes screenshot service which costs!
         await sleep(2000);
         
-        await this.bridge.swipe(1850, 620, 1100, 620, 250); // The current qame has 2 promo packs
+        await this.swipe(1850, 620, 1100, 620, 250); // The current qame has 2 promo packs
 
         await sleep(2000);
         console.log("Taking screenshot of gifts screen");

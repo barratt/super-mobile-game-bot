@@ -12,6 +12,7 @@ import gm from "gm";
 import collission from "./utils/collission-detection";
 import { Region } from "./Models/Region";
 import { ColourPoint } from "./Models/ColourPoint";
+import { DeviceScreen } from "./Models/DeviceScreen";
 export class Automator {
     cognative;
     bridge : BridgeInterface;
@@ -19,6 +20,11 @@ export class Automator {
     ocr = {}            // scene->ocr
     lastScreenshot; 
     lastOcr;
+
+    designedFor: DeviceScreen;
+    currentScreenSize: DeviceScreen;
+    xScale: number;
+    yScale: number;
 
     constructor(bridge) {
         this.bridge = bridge;
@@ -33,6 +39,34 @@ export class Automator {
                 "Ocp-Apim-Subscription-Key": process.env.COGNATIVE_KEY
             }
         });
+    }
+    async init() {
+        // Maybe this changes based on orientation?
+        this.currentScreenSize = await this.bridge.screenResolution();
+
+        this.yScale = this.currentScreenSize.height / this.designedFor.height;
+        this.xScale = this.currentScreenSize.width / this.designedFor.width;
+    }
+
+    async swipe(xStart, yStart, xStop, yStop, durationMs): Promise<boolean> {
+        const { xScale, yScale } = this;
+        // TODO: Add randomness?
+
+        return await this.bridge.swipe(
+            Math.floor(xStart * xScale), 
+            Math.floor(yStart * yScale),
+            Math.floor(xStop * xScale),
+            Math.floor(yStop*xScale),
+            durationMs
+        )
+    }
+
+    async tapLocation(location) {
+        // TODO: Add randomness?
+        return await this.bridge.tap(
+            Math.floor(location[0] * this.xScale), 
+            Math.floor(location[1] * this.yScale)
+        )
     }
 
     async takeScreenshot(scene) {
