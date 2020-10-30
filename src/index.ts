@@ -56,9 +56,9 @@ async function main() {
 
       if (await bot.isOnGameHomeScreen()) {
         await bot.claimGifts();
-        // await bot.startRefinery();
-        // await bot.helpAlliance();
-        // await bot.getPlayerScore();
+        await bot.startRefinery();
+        await bot.helpAlliance();
+        await bot.getPlayerScore();
       } else {
         console.log("Bot not on home screen, Did something go wrong or am I just loading?");
       }

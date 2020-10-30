@@ -1,6 +1,9 @@
 // Bots can extend the automator which can give them superpowers 
 // TODO: Refactor cognative to our own APIs.
 
+// const averageColour = require('image-average-color');
+var getPixels       = require("get-pixels");
+ 
 import Axios from "axios";
 import { BridgeInterface } from "./lib/Bridges/BridgeInterface";
 import FormData from 'form-data'
@@ -8,6 +11,7 @@ import FormData from 'form-data'
 import gm from "gm"; 
 import collission from "./utils/collission-detection";
 import { Region } from "./Models/Region";
+import { ColourPoint } from "./Models/ColourPoint";
 export class Automator {
     cognative;
     bridge : BridgeInterface;
@@ -112,5 +116,40 @@ export class Automator {
         }
 
         return null;
+    }
+
+    // Returns array of matched
+    async checkRGBColoursForPoints(points: Array<ColourPoint>, scene = "last"): Promise<Array<ColourPoint>> {
+        const self = this;
+
+        let pixels = await new Promise(function(resolve, reject) { 
+            getPixels(self.screenshots[scene], 'image/jpg', function(err, pixels) {
+                if (err) return reject(err);
+
+                return resolve(pixels);
+            });
+        });
+
+        let matchedPixels = [];
+
+        for (let point of points) {
+            
+            let pixelR = (pixels as any).get(point.x, point.y, 0);
+            let pixelG = (pixels as any).get(point.x, point.y, 1);
+            let pixelB = (pixels as any).get(point.x, point.y, 2);
+            let pixelA = (pixels as any).get(point.x, point.y, 3);
+
+            console.log(`Got pixel: R: ${pixelR}, G:${pixelG}, B:${pixelB}, A:${pixelA}`);
+
+            let rInTolerance = (pixelR - point.r < (point.tolerance || 0));
+            let gInTolerance = (pixelG - point.g < (point.tolerance || 0));
+            let bInTolerance = (pixelB - point.b < (point.tolerance || 0));
+
+            if (rInTolerance && bInTolerance && gInTolerance) {
+                matchedPixels.push(point);
+            }
+        }
+
+        return matchedPixels;
     }
 }

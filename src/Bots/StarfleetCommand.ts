@@ -35,6 +35,10 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX: { x1: 2560, y1: 395, x2: 2615, y2: 550 },
     }
 
+    colourPoints = {
+        ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 10 } ]
+    }
+
     scenes = {
         MAIN_VIEW: "main",
         GIFTS_VIEW: "gifts",
@@ -88,17 +92,20 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
     async helpAlliance() {
         console.log("Checking for alliance help");
 
-        let notification = await this.findTextInRegion(this.regions.ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX, this.scenes.MAIN_VIEW);
-        if (notification.length == 0) {
+        let matched = await this.checkRGBColoursForPoints(this.colourPoints.ALLIANCE_HELP, this.scenes.MAIN_VIEW);
+
+        if (matched.length < this.colourPoints.ALLIANCE_HELP.length) {
             // No refinery today.
             console.log("Alliance doesn't need help!");
             return;
+        } else {
+            console.log("Alliance needs help!")
         }
 
         await this.tapLocation(this.locations.ALLIANCE_HELP);
         await sleep(2000);
         await this.tapLocation(this.locations.ALLIANCE_HELP_ALL);
-        console.log(`Helped ${notification} people!`);
+        // console.log(`Helped ${notification} people!`);
     }
 
     async startRefinery() {
@@ -106,11 +113,10 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         // TODO: Make this smarter, find where the refinery buttons are instead.
 
         // Check if refinery is unlocked
-        let refineryUnlocked = (await this.findTextInRegion(this.regions.REFINERY_NOTIFICATION_BOUNDING_BOX, this.scenes.MAIN_VIEW)).toLowerCase();
-        if (refineryUnlocked == "refinery") {
-            console.log("Yep refinery unlocked")
-        } else {
-            console.log("Refinery wasn't where we expected!");
+        let refineryUnlocked = await this.findRegionForText("Refinery", this.scenes.MAIN_VIEW)
+
+        if (!refineryUnlocked) {
+            console.log("Refinery not unlocked, or I couldn't see it");
             return;
         }
 
@@ -155,13 +161,19 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
     async claimGifts() {
         console.log("claiming gifts");
         let box = await this.findRegionForText("CLAIM");
+
+        if (!box) {
+            console.log("Nothing to claim!");
+            return;
+        }
+
         await this.tapLocation([ (box.x1+box.x2)/2, (box.y1+box.y2)/2 ]);
         // Wait until we can see it? That takes screenshot service which costs!
         await sleep(2000);
         
         await this.bridge.swipe(1850, 620, 1100, 620, 250); // The current qame has 2 promo packs
 
-        await sleep(1000);
+        await sleep(2000);
         console.log("Taking screenshot of gifts screen");
 
         // TODO: Take screenshot click claim?
@@ -170,8 +182,8 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
 
         const chests = {
             "MIN10": { x1: 600, y1: 1080, x2: 900, y2: 1165 }, // Green claim button or available in
-            "HOUR4": { x1: 1030, y1: 1080, x2: 0, y2: 0 },
-            "HOUR24": { x1: 0, y1: 0, x2: 0, y2: 0 },
+            "HOUR4": { x1: 1030, y1: 1080, x2: 1500, y2: 1165 },
+            "HOUR24": { x1: 1700, y1: 1080, x2: 2200, y2: 1165 },
         }
 
         let min10Text= await this.findTextInRegion(chests.MIN10, this.scenes.GIFTS_VIEW);
@@ -194,6 +206,7 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
             await sleep(2000);
+        } else {
             console.log("4h chest not available");
         }
 
@@ -204,6 +217,7 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
             await sleep(2000);
+        } else {
             console.log("24h chest not available");
         }
 

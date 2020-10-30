@@ -39,6 +39,8 @@ export class ADB implements BridgeInterface {
         console.log("Checking if already focused");
         const { appPackage, appActivity } = await client.getFocusedPackageAndActivity();
         
+        console.log(`Checking for focus: ${appPackage} ${appActivity}`);
+        console.log(`Looking for: ${packageIdentifier} ${mainActivity}`);
         if (appPackage == packageIdentifier && appActivity == mainActivity) {
             console.log("App already focused!");
             return true;
