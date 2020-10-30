@@ -57,19 +57,19 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
         console.log("Initializing bot")
         await this.init();
         console.log("Bot ready");
-
-        // Lets see whats happening.
-        await this.takeScreenshot("main");
-        // this.lastScreenshot = require('fs').readFileSync('../research/android_scripts/screen2.png');
-  
-        // Run the OCR on the last screenshot 
-        await this.runOcr("main");
-        // this.lastOcr = require('../research/ocrresponse.json');
         
+        console.log("Finding main screen");
         const maxAttempts = 5;
-
         let checkOnScreen = maxAttempts;
         while (checkOnScreen > 0) {
+            // Lets see whats happening.
+            await this.takeScreenshot("main");
+            // this.lastScreenshot = require('fs').readFileSync('../research/android_scripts/screen2.png');
+    
+            // Run the OCR on the last screenshot 
+            await this.runOcr("main");
+            // this.lastOcr = require('../research/ocrresponse.json');
+
             let isOnHomescreen = await this.isOnGameHomeScreen();
             if (isOnHomescreen)
                 break;
@@ -77,13 +77,15 @@ export class StarfleetCommandBot extends Automator implements BotInterface {
             // We're not. Lets wait.
             checkOnScreen--;
             console.log(`Home screen not detected, waiting (Attempt ${maxAttempts-checkOnScreen}/${maxAttempts})`)
-            await sleep(2000);
+            await sleep(4000);
+            // isOn
         }
 
         if (checkOnScreen == 0) {
-            throw new Error("Unable to start starfleet bot. Homescreen not detected");
+            throw new Error("Unable to start StarFleet bot. Home-screen not detected");
         }
 
+        console.log("Found home screen, now doing the actual botting");
         await this.claimGifts();
         await this.startRefinery();
         await this.helpAlliance();
