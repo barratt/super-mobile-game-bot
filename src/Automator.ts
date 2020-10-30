@@ -175,9 +175,9 @@ export class Automator {
 
             console.log(`Got pixel: R: ${pixelR}, G:${pixelG}, B:${pixelB}, A:${pixelA}`);
 
-            let rInTolerance = (pixelR - point.r < (point.tolerance || 0));
-            let gInTolerance = (pixelG - point.g < (point.tolerance || 0));
-            let bInTolerance = (pixelB - point.b < (point.tolerance || 0));
+            let rInTolerance = (Math.abs(pixelR - point.r) < (point.tolerance || 0));
+            let gInTolerance = (Math.abs(pixelG - point.g) < (point.tolerance || 0));
+            let bInTolerance = (Math.abs(pixelB - point.b) < (point.tolerance || 0));
 
             if (rInTolerance && bInTolerance && gInTolerance) {
                 matchedPixels.push(point);

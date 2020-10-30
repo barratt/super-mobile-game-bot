@@ -26,6 +26,8 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
 
         ALLIANCE_HELP: [ 2500, 500 ],
         ALLIANCE_HELP_ALL: [ 1500, 1350 ],
+
+        MISSION_SHORTCUT: [ 707, 1038 ]
     }
 
     regions = {
@@ -36,7 +38,8 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
     }
 
     colourPoints = {
-        ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 10 } ]
+        ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 10 } ],
+        MISSION_READY: [ { x: 707, y: 1038, r: 24, g: 164, b: 32, tolerance: 10 } ],
     }
 
     scenes = {
@@ -86,9 +89,11 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         }
 
         console.log("Found home screen, now doing the actual botting");
+
         await this.claimGifts();
         await this.startRefinery();
         await this.helpAlliance();
+        await this.redeemActiveMission();
         await this.getPlayerScore();
 
         return true;
@@ -221,7 +226,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             "HOUR24": { x1: 1700, y1: 1080, x2: 2300, y2: 1165 },
         }
 
-        let min10Text= await this.findTextInRegion(chests.MIN10, this.scenes.GIFTS_VIEW);
+        let min10Text = await this.findTextInRegion(chests.MIN10, this.scenes.GIFTS_VIEW);
 
         if (min10Text == "CLAIM") {
             console.log("Claiming 10 minute chest");
@@ -260,6 +265,23 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         console.log("Done collecting gifts"); 
 
         // Now we can select claim on the others?
+    }
+
+    async redeemActiveMission() {
+        let matched = await this.checkRGBColoursForPoints(this.colourPoints.MISSION_READY, this.scenes.MAIN_VIEW);
+
+        if (matched.length < this.colourPoints.MISSION_READY.length) {
+            console.log("Mission not ready!");
+            return;
+        }
+
+        console.log("Accepting mission ready");
+        await this.tapLocation(this.locations.MISSION_SHORTCUT);
+        await sleep(1000);
+        console.log("Accepted mission");
+    }
+
+    async collectGenerators() {
 
     }
 }
