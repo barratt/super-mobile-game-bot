@@ -63,11 +63,14 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await this.init();
         console.log("Bot ready");
         
-        console.log("Finding main screen");
+        console.log("Finding main screen"); 
+        await sleep(4000); // It at least takes 4 seconds for it to begin loading.
+
         const maxAttempts = 5;
         let checkOnScreen = maxAttempts;
         while (checkOnScreen > 0) {
             // Lets see whats happening.
+            
             await this.takeScreenshot("main");
             // this.lastScreenshot = require('fs').readFileSync('../research/android_scripts/screen2.png');
     
@@ -289,5 +292,13 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         // TODO: Collect parasteel
         // TODO: Collect tritanium
         // TODO: Collect dilithium
+    }
+
+    async collectAllianceRewards() {
+        // TODO:
+    }
+
+    async skipIntroPromo() {
+        // TODO: 
     }
 }

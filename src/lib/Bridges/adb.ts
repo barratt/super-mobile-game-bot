@@ -17,7 +17,12 @@ export class ADB implements BridgeInterface {
 
     async init() {
         this.client = await AppiumADB.createADB();
-        this.client.setDeviceId(this.deviceId);
+        // console.log("Connecting");
+        // await this.client.adbExec([`connect ${this.deviceId}`])
+        // console.log("calling reconnect")
+        // await this.client.reconnect('device');
+        console.log("Setting device id")
+        await this.client.setDeviceId(this.deviceId);
         return null;
     }
 

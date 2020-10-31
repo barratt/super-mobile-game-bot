@@ -1,9 +1,14 @@
 const fs = require('fs');
 // const concat = require('concat-stream')
 import "dotenv/config";
-import sleep from "await-sleep";
-import { StarFleetCommandBot } from "./Bots/StarfleetCommand";
 import { ADB } from "./lib/Bridges/adb";
+
+// TODO: Load this dynamically?
+import { StarFleetCommandBot } from "./Bots/StarFleetCommand";
+
+const bots = {
+  StarFleetCommandBot,
+};
 
 const deviceId = process.env.DEVICE_ID;
 
@@ -19,10 +24,10 @@ async function main() {
       console.log("Device locked! Unlocking"); 
       await bridge.unlockDevice(process.env.DEVICE_PIN);
     } else {
-      console.log("Device unlocked!");
+      console.log("Device already unlocked!");
     }
 
-    const bot = new StarFleetCommandBot(bridge);
+    const bot = new bots[process.env.ENABLED_BOT](bridge);
     
     // See if we can see something familiar first if not die.
     console.log("starting app");
