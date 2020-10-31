@@ -232,21 +232,26 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
 
         let claimableChests = await this.findRegionsForText("CLAIM", this.scenes.GIFTS_VIEW);
 
-        for (let chest of claimableChests) {
+        for (let i = 0; i < claimableChests.length; i++) {
+            let chest = claimableChests[i];
+
             console.log("Claiming chest");
 
             await this.tapLocation([ Math.floor((chest.x1 + chest.x2)/2), Math.floor((chest.y1 + chest.y2) / 2) ]);
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
-            // Swipe back into position for the next one.
-            await this.swipe(
-                (this.currentScreenSize.width/10) * 8, 
-                this.currentScreenSize.height/2, 
-                (this.currentScreenSize.width/10) * 4, 
-                this.currentScreenSize.height/2, 
-                5000
-            ); 
-            await sleep(2000);
+
+            if (i < claimableChests.length) {
+                // Swipe back into position for the next one.
+                await this.swipe(
+                    (this.currentScreenSize.width/10) * 8, 
+                    this.currentScreenSize.height/2, 
+                    (this.currentScreenSize.width/10) * 4, 
+                    this.currentScreenSize.height/2, 
+                    5000
+                ); 
+                await sleep(2000);
+            }
         }
 
         await this.tapLocation(this.locations.TOP_LEFT_BACK);

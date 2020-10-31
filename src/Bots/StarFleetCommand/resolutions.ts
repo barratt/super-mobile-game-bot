@@ -63,8 +63,8 @@ resolutions["2880x1440"] = {
     colourPoints: {
         ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 15 } ],
         MISSION_READY: [ { x: 707, y: 1038, r: 24, g: 164, b: 32, tolerance: 15 } ],
-        BUILDING_READY: [ { x: 630, y: 520, r: 24, g: 164, b: 32, tolerance: 15 } ],
-        RESEARCH_READY: [ { x: 630, y: 630, r: 24, g: 164, b: 32, tolerance: 15 } ],
+        BUILDING_READY: [ { x: 630, y: 520, r: 24, g: 164, b: 32, tolerance: 35 } ], // Tol 35 as the speed up could be available, which is equally as cool 
+        RESEARCH_READY: [ { x: 630, y: 630, r: 24, g: 164, b: 32, tolerance: 35 } ], // Tol 30 as the speed up could be available, which is equally as cool 
         INTRO_PROMO_CLOSE: [ { x: 2466, y: 238, r: 220, g: 55, b: 55, tolerance: 15 }, { x: 2497, y: 268, r: 255, g: 212, b: 204, tolerance: 10 } ]
     },
 }
