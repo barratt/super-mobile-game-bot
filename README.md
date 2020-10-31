@@ -16,6 +16,14 @@ Getting Started
 
 To get started with this project clone it down, copy .env.sample to .env and configure, then use the vscode debugger.
 
+Features
+----
+- Multi bot support
+- Winston logging
+- OCR 
+- iOS/Android agnostic bots
+- Implement bots however is best (i.e multi-resolution support, scaled interface)
+
 TODO
 ----
 
@@ -26,6 +34,7 @@ TODO
 - Allow ADB bridge to connect to the device itself
 - Implement winston logging levels
 - Implement a GUI 
+- Multiple deviceIds (fallback device id for wifi + local wire)
 
 Notes
 ----
@@ -50,7 +59,11 @@ Features:
 - Starts refinery
 - Collects gifts
 - Alliance help
+- Collects mission rewards
+- Completes finished buildings
+- Completes finished research
 
 Coming soon:
 - Statistic reporting
-- 
+- Resource generator collection
+- Upgrade next building
