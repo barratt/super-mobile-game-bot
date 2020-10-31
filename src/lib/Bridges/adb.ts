@@ -6,6 +6,8 @@ import AppiumADB from 'appium-adb';
 import sleep from "await-sleep";
 import { DeviceScreen } from "../../Models/DeviceScreen";
 
+import logger from "../winston";
+
 export class ADB implements BridgeInterface {
     client;
     deviceId;
@@ -17,26 +19,26 @@ export class ADB implements BridgeInterface {
 
     async init() {
         this.client = await AppiumADB.createADB();
-        // console.log("Connecting");
+        // logger.debug("Connecting");
         // await this.client.adbExec([`connect ${this.deviceId}`])
-        // console.log("calling reconnect") 
+        // logger.debug("calling reconnect") 
         // await this.client.reconnect('device');
-        console.log("Setting device id")
+        logger.debug("Setting device id")
         await this.client.setDeviceId(this.deviceId);
         return null;
     }
 
     async swipe(xStart, yStart, xStop, yStop, durationMs): Promise<boolean> {
 
-        console.log(`Swiping (${xStart}, ${yStart})`);
-        console.log(`adb shell input touchscreen swipe ${xStart} ${yStart} ${xStop} ${yStop} ${durationMs}`)
+        logger.debug(`Swiping (${xStart}, ${yStart})`);
+        logger.debug(`adb shell input touchscreen swipe ${xStart} ${yStart} ${xStop} ${yStop} ${durationMs}`)
         await this.client.shell(`input touchscreen swipe ${xStart} ${yStart} ${xStop} ${yStop} ${durationMs}`);
         await sleep(durationMs + 100);
 
         return true;
     }
     async tap(x, y): Promise<boolean> {
-        console.log(`Tapping (${x}, ${y})`);
+        logger.debug(`Tapping (${x}, ${y})`);
         await this.client.shell(`input tap ${x} ${y}`);
         return true;
     }
@@ -46,12 +48,12 @@ export class ADB implements BridgeInterface {
 
         let isOpen = await this.checkAppOpen(packageIdentifier, mainActivity);
         if (isOpen) {
-            console.log("App already open!");
+            logger.debug("App already open!");
             return true;
         }
 
         await client.shell('settings put system screen_brightness 255');
-        console.log(`Starting ${packageIdentifier}/${mainActivity}`);
+        logger.debug(`Starting ${packageIdentifier}/${mainActivity}`);
         await client.startApp({
             pkg: packageIdentifier,
             activity: mainActivity,
@@ -60,7 +62,7 @@ export class ADB implements BridgeInterface {
         let checkAttempts = 5;
         while (((await client.getPIDsByName(packageIdentifier)).length == 0 && checkAttempts > 5)) {
             await sleep(2000);
-            console.log("Can't find running app yet, waiting.");
+            logger.debug("Can't find running app yet, waiting.");
             checkAttempts--;
         }
 
@@ -70,11 +72,11 @@ export class ADB implements BridgeInterface {
     async checkAppOpen(packageIdentifier: string, mainActivity: string) {
         const { client } = this;
 
-        console.log("Checking if already focused");
+        logger.debug("Checking if already focused");
         const { appPackage, appActivity } = await client.getFocusedPackageAndActivity();
         
-        console.log(`Checking for focus: ${appPackage} ${appActivity}`);
-        console.log(`Looking for: ${packageIdentifier} ${mainActivity}`);
+        logger.debug(`Checking for focus: ${appPackage} ${appActivity}`);
+        logger.debug(`Looking for: ${packageIdentifier} ${mainActivity}`);
         if (appPackage == packageIdentifier && appActivity == mainActivity) {
             return true;
         }
@@ -85,7 +87,7 @@ export class ADB implements BridgeInterface {
     async unlockDevice(passCode: string) {
         const { client, deviceId } = this;
         // TODO: Prevent shell attack verifiy pc
-        console.log(`entering passcode ${passCode} for device ${deviceId}`);
+        logger.debug(`entering passcode ${passCode} for device ${deviceId}`);
         
         // TODO: Get device width and height when doing swipe
         await client.keyevent(26); // Power
@@ -97,7 +99,7 @@ export class ADB implements BridgeInterface {
         await client.keyevent(3); // Home 
 
         await sleep(1000);
-        console.log("Done device unlocked");
+        logger.debug("Done device unlocked");
     }
 
     async takeScreenshot(): Promise<Buffer> {
@@ -123,11 +125,13 @@ export class ADB implements BridgeInterface {
         let screenSize = (await this.client.shell(`wm size`)).replace('Physical size: ', '').split('x');
         // This assumes portrait mode.
         // I'm inverting this for now because we assume its always landscape.
+        logger.debug("ADB got device resolution");
         return { width: screenSize[1], height: screenSize[0] };
     }
 
     async wakeScreen(): Promise<boolean> {
         await this.client.shell(`input keyevent mouse`);
+        logger.debug("Done device keepalive");
         return true;
     }
 }

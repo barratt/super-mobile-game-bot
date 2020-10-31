@@ -5,6 +5,8 @@ import { Automator } from "../../Automator";
 
 import resolutions from "./resolutions";
 
+import logger from "../../lib/winston";
+
 // TODO: Remove screen resolution dependency 
 export class StarFleetCommandBot extends Automator implements BotInterface {
     iosSupported: false;
@@ -33,9 +35,9 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
     }
 
     async start() {
-        console.log("StarFleet command bot start action");
+        logger.info("StarFleet command bot start action");
 
-        console.log("Initializing bot")
+        logger.info("Initializing bot")
         // Should we initialize with scaling?
         let deviceSize = await this.bridge.screenResolution();
         let resolution = `${deviceSize.width}x${deviceSize.height}`;
@@ -47,19 +49,19 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         // TODO Scale based on a different aspect ratio?
         // If we support this resolution then use specific co-ordinates, otherwise use scaling.
         if (resolutions[resolution]) {
-            console.log("Screen resolution supported, happy botting!");
+            logger.info("Screen resolution supported, happy botting!");
             await this.init(false);
 
         } else {
-            console.log("WARNING: This bot has not been optimized for your device resolution! Trying to use scaling.");
+            logger.info("WARNING: This bot has not been optimized for your device resolution! Trying to use scaling.");
             await this.init(true);
         }
 
-        console.log("Bot ready");
+        logger.info("Bot ready");
 
         this.keepScreenAwake();
         
-        console.log("Finding main screen"); 
+        logger.info("Finding main screen"); 
         await sleep(5000); // It at least takes 4 seconds for it to begin loading.
 
         const maxAttempts = 5;
@@ -81,7 +83,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
 
             // We're not. Lets wait.
             checkOnScreen--;
-            console.log(`Home screen not detected, waiting (Attempt ${maxAttempts-checkOnScreen}/${maxAttempts})`)
+            logger.info(`Home screen not detected, waiting (Attempt ${maxAttempts-checkOnScreen}/${maxAttempts})`)
             await sleep(5000);
             // isOn
         }
@@ -90,7 +92,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             throw new Error("Unable to start StarFleet bot. Home-screen not detected");
         }
 
-        console.log("Found home screen, now doing the actual botting");
+        logger.info("Found home screen, now doing the actual botting");
 
         await this.claimGifts();
         await this.startRefinery();
@@ -104,14 +106,14 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
     }
 
     stop() {
-        console.log("StarFleet command bot stopping!");
+        logger.info("StarFleet command bot stopping!");
         // Somehow stop the start method?
-        console.log("StarFleet command unable to stop!");
+        logger.info("StarFleet command unable to stop!");
         return false;
     }
 
     async getPlayerScore() : Promise<number> {
-        console.log("Getting score");
+        logger.info("Getting score");
         let scoreString = await this.findTextInRegion(this.regions.PLAYER_SCORE_BOUNDING_BOX, this.scenes.MAIN_VIEW);
         let score = parseInt(scoreString.replace(/,/gmi, '').trim());
 
@@ -119,12 +121,12 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             return null;
         }
     
-        console.log(`Found score: ${score}`);
+        logger.info(`Found score: ${score}`);
         return score;
     }
 
     async isOnGameHomeScreen() {
-        console.log("Checking if bot is on home screen");
+        logger.info("Checking if bot is on home screen");
         let score = await this.getPlayerScore();
         if (score != null && score > 0) {
             return true;
@@ -134,22 +136,22 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
     }
 
     async helpAlliance() {
-        console.log("Checking for alliance help");
+        logger.info("Checking for alliance help");
 
         let matched = await this.checkRGBColoursForPoints(this.colourPoints.ALLIANCE_HELP, this.scenes.MAIN_VIEW);
 
         if (matched.length < this.colourPoints.ALLIANCE_HELP.length) {
             // No refinery today.
-            console.log("Alliance doesn't need help!");
+            logger.info("Alliance doesn't need help!");
             return;
         } else {
-            console.log("Alliance needs help!")
+            logger.info("Alliance needs help!")
         }
 
         await this.tapLocation(this.locations.ALLIANCE_HELP);
         await sleep(2000);
         await this.tapLocation(this.locations.ALLIANCE_HELP_ALL);
-        // console.log(`Helped ${notification} people!`);
+        // logger.info(`Helped ${notification} people!`);
     }
 
     async startRefinery() {
@@ -160,7 +162,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         let refineryUnlocked = await this.findRegionForText("Refinery", this.scenes.MAIN_VIEW)
 
         if (!refineryUnlocked) {
-            console.log("Refinery not unlocked, or I couldn't see it");
+            logger.info("Refinery not unlocked, or I couldn't see it");
             return;
         }
 
@@ -168,46 +170,46 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         let notification = await this.findTextInRegion(this.regions.REFINERY_NOTIFICATION_BOUNDING_BOX, this.scenes.MAIN_VIEW);
         if (notification.length == 0) {
             // No refinery today.
-            console.log("Refinery already done!");
+            logger.info("Refinery already done!");
             return;
         }
 
-        console.log("Opening refinery");
+        logger.info("Opening refinery");
         await this.tapLocation(locations.REFINERY);
         await sleep(2000);
-        console.log("Obtaining 1 chest crystal");
+        logger.info("Obtaining 1 chest crystal");
         await this.tapLocation(locations.REFINERY_GRADE_2_CRYSTAL); // Crystal 
         await sleep(2000);
         await this.tapLocation(locations.REFINERY_MATERIALS_1CHEST);
         await sleep(2000);
         await this.tapLocation(locations.BOTTOM_CENTER_DONE);
         await sleep(2000);
-        console.log("Obtaining 1 chest gas");
+        logger.info("Obtaining 1 chest gas");
         await this.tapLocation(locations.REFINERY_GRADE_2_GAS); // Gas
         await sleep(2000);
         await this.tapLocation(locations.REFINERY_MATERIALS_1CHEST);
         await sleep(2000);
         await this.tapLocation(locations.BOTTOM_CENTER_DONE);
         await sleep(2000);
-        console.log("Obtaining 1 chest ore");
+        logger.info("Obtaining 1 chest ore");
         await this.tapLocation(locations.REFINERY_GRADE_2_ORE); // Ore
         await sleep(2000);
         await this.tapLocation(locations.REFINERY_MATERIALS_1CHEST);
         await sleep(2000);
         await this.tapLocation(locations.BOTTOM_CENTER_DONE);
         await sleep(2000);
-        console.log("Done, exiting refinery");
+        logger.info("Done, exiting refinery");
         await this.tapLocation(locations.TOP_LEFT_BACK);
 
-        console.log("We're all done collecting chest rewards");
+        logger.info("We're all done collecting chest rewards");
     }
 
     async claimGifts() {
-        console.log("claiming gifts");
+        logger.info("claiming gifts");
         let box = await this.findRegionForText("CLAIM");
 
         if (!box) {
-            console.log("Nothing to claim!");
+            logger.info("Nothing to claim!");
             return;
         }
 
@@ -224,7 +226,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             this.currentScreenSize.height/2, 5000); 
 
         await sleep(2000);
-        console.log("Taking screenshot of gifts screen");
+        logger.info("Taking screenshot of gifts screen");
 
         // TODO: Take screenshot click claim?
         await this.takeScreenshot(this.scenes.GIFTS_VIEW);
@@ -235,13 +237,13 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         for (let i = 0; i < claimableChests.length; i++) {
             let chest = claimableChests[i];
 
-            console.log("Claiming chest");
+            logger.info("Claiming chest");
 
             await this.tapLocation([ Math.floor((chest.x1 + chest.x2)/2), Math.floor((chest.y1 + chest.y2) / 2) ]);
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
 
-            if (i < claimableChests.length) {
+            if ((i+1) < claimableChests.length) {
                 // Swipe back into position for the next one.
                 await this.swipe(
                     (this.currentScreenSize.width/10) * 8, 
@@ -255,7 +257,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         }
 
         await this.tapLocation(this.locations.TOP_LEFT_BACK);
-        console.log("Done collecting gifts"); 
+        logger.info("Done collecting gifts"); 
 
         // Now we can select claim on the others?
     }
@@ -266,30 +268,30 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         // Claim Mission Rewards
         let missionMatches = await this.checkRGBColoursForPoints(this.colourPoints.MISSION_READY, this.scenes.MAIN_VIEW);
         if (missionMatches.length == this.colourPoints.MISSION_READY.length) {
-            console.log("Accepting mission ready");
+            logger.info("Accepting mission ready");
             await this.tapLocation([ missionMatches[0].x, missionMatches[0].y ]);
             return;
-        } else console.log("No mission ready detected");
+        } else logger.info("No mission ready detected");
 
         await sleep(250);
 
         // Claim Building Rewards
         let buildingMatches = await this.checkRGBColoursForPoints(this.colourPoints.BUILDING_READY, this.scenes.MAIN_VIEW);
         if (buildingMatches.length == this.colourPoints.BUILDING_READY.length) {
-            console.log("Accepting building ready");
+            logger.info("Accepting building ready");
             await this.tapLocation([ buildingMatches[0].x, buildingMatches[0].y ]);
             return;
-        } else console.log("No building ready detected");
+        } else logger.info("No building ready detected");
 
         await sleep(250);
 
         // Claim Research Rewards
         let researchMatches = await this.checkRGBColoursForPoints(this.colourPoints.RESEARCH_READY, this.scenes.MAIN_VIEW);
         if (researchMatches.length == this.colourPoints.RESEARCH_READY.length) {
-            console.log("Accepting research ready");
+            logger.info("Accepting research ready");
             await this.tapLocation([ researchMatches[0].x, researchMatches[0].y ]);
             return;
-        } else console.log("No research ready detected");
+        } else logger.info("No research ready detected");
 
         await sleep(250);
     }
@@ -310,11 +312,11 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         let matched = await this.checkRGBColoursForPoints(this.colourPoints.INTRO_PROMO_CLOSE, this.scenes.MAIN_VIEW);
 
         if (matched.length < this.colourPoints.MISSION_READY.length) {
-            console.log("No promo!");
+            logger.info("No promo!");
             return;
         }
         
-        console.log("Closing promo window");
+        logger.info("Closing promo window");
 
         await this.tapLocation(this.locations.INTRO_PROMO_CLOSE);
         await sleep(1000);

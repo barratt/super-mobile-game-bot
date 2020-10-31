@@ -5,6 +5,7 @@ import { ADB } from "./lib/Bridges/adb";
 
 // TODO: Load this dynamically?
 import { StarFleetCommandBot } from "./Bots/StarFleetCommand/StarFleetCommand";
+import logger from "./lib/winston";
 
 const bots = {
   StarFleetCommandBot,
@@ -12,35 +13,33 @@ const bots = {
 
 const deviceId = process.env.DEVICE_ID;
 
-console.log("What");
-
 async function main() {
   try {
     const bridge  = new ADB(deviceId);
-    console.log("Started");
+    logger.info("Started");
     await bridge.init();
-    console.log("Bridge ready");
+    logger.info("Bridge ready");
     if (await bridge.client.isScreenLocked()) {
-      console.log("Device locked! Unlocking"); 
+      logger.info("Device locked! Unlocking"); 
       await bridge.unlockDevice(process.env.DEVICE_PIN);
     } else {
-      console.log("Device already unlocked!");
+      logger.info("Device already unlocked!");
     }
 
     const bot = new bots[process.env.ENABLED_BOT](bridge);
     
     // See if we can see something familiar first if not die.
-    console.log("starting app");
+    logger.info("starting app");
     let appStarted = await bridge.startApp(bot.androidPackageIdentifier, bot.androidMainActivity);
     if (appStarted) {
-      console.log("App started! Waiting for app to load");
+      logger.info("App started! Waiting for app to load");
     } else {
-      console.log("Couldn't start app");
+      logger.info("Couldn't start app");
     }
 
-    console.log("Starting bot")
+    logger.info("Starting bot")
     await bot.start(); // This is a promise and stops when the bot stops. If it stops.
-    console.log("Bot all done.");
+    logger.info("Bot all done.");
   } catch (e) {
     console.error(e);
   }
