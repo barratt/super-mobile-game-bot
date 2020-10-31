@@ -102,6 +102,12 @@ export class ADB implements BridgeInterface {
         logger.debug("Done device unlocked");
     }
 
+    async lockDevice() {
+        const { client, deviceId } = this;
+        await client.keyevent(3); // Home 
+        await client.keyevent(26); // Power
+    }
+
     async takeScreenshot(): Promise<Buffer> {
         const { client, deviceId } = this;
         

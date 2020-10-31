@@ -6,7 +6,8 @@ export interface BridgeInterface {
     startApp(identifier: string, activity: string): Promise<boolean>;
     checkAppOpen(identifier: string, activity: string) : Promise<boolean>;
     unlockDevice(passCode: string);
-
+    lockDevice();
+    
     screenResolution(): Promise<DeviceScreen>;
     takeScreenshot(): Promise<Buffer>;
     tap(x: number, y: number);

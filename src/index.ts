@@ -40,6 +40,8 @@ async function main() {
     logger.info("Starting bot")
     await bot.start(); // This is a promise and stops when the bot stops. If it stops.
     logger.info("Bot all done.");
+
+    await bridge.lockDevice();
   } catch (e) {
     console.error(e);
   }

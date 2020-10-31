@@ -16,6 +16,8 @@ Getting Started
 
 To get started with this project clone it down, copy .env.sample to .env and configure, then use the vscode debugger.
 
+You will need NodeJS 12 and ADB available on path.
+
 Features
 ----
 - Multi bot support
