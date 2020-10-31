@@ -49,6 +49,7 @@ export class ADB implements BridgeInterface {
             return true;
         }
 
+        await client.shell('settings put system screen_brightness 255');
         console.log(`Starting ${packageIdentifier}/${mainActivity}`);
         await client.startApp({
             pkg: packageIdentifier,
@@ -86,10 +87,13 @@ export class ADB implements BridgeInterface {
         console.log(`entering passcode ${passCode} for device ${deviceId}`);
         
         // TODO: Get device width and height when doing swipe
-        await client.keyevent(26)
-        await client.shell('input touchscreen swipe 930 1500 930 300 200')
+        await client.keyevent(26); // Power
+        await sleep(500);
+        await client.shell('input touchscreen swipe 930 1500 930 300 200'); // swipe up
         await client.shell(`input text ${passCode}`)
-        await client.keyevent(66)
+        await client.keyevent(66); // Enter
+        await sleep(250);
+        await client.keyevent(3); // Home 
 
         await sleep(1000);
         console.log("Done device unlocked");

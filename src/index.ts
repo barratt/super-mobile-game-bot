@@ -4,7 +4,7 @@ import "dotenv/config";
 import { ADB } from "./lib/Bridges/adb";
 
 // TODO: Load this dynamically?
-import { StarFleetCommandBot } from "./Bots/StarFleetCommand";
+import { StarFleetCommandBot } from "./Bots/StarFleetCommand/StarFleetCommand";
 
 const bots = {
   StarFleetCommandBot,

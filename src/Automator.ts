@@ -9,7 +9,7 @@ import { BridgeInterface } from "./lib/Bridges/BridgeInterface";
 import FormData from 'form-data'
 
 import gm from "gm"; 
-import collission from "./utils/collission-detection";
+import collission, { touches } from "./utils/collission-detection";
 import { Region } from "./Models/Region";
 import { ColourPoint } from "./Models/ColourPoint";
 import { DeviceScreen } from "./Models/DeviceScreen";
@@ -42,12 +42,17 @@ export class Automator {
             }
         });
     }
-    async init() {
+    async init(implementScaling = true) {
         // Maybe this changes based on orientation?
         this.currentScreenSize = await this.bridge.screenResolution();
 
-        this.yScale = this.currentScreenSize.height / this.designedFor.height;
-        this.xScale = this.currentScreenSize.width / this.designedFor.width;
+        if (implementScaling) { 
+            this.yScale = this.currentScreenSize.height / this.designedFor.height;
+            this.xScale = this.currentScreenSize.width / this.designedFor.width;
+        } else {
+            this.yScale = 1;
+            this.xScale = 1;
+        }
     }
 
     async swipe(xStart, yStart, xStop, yStop, durationMs): Promise<boolean> {
@@ -111,6 +116,12 @@ export class Automator {
     }
 
     async findTextInRegion(needleRegion: { x1: number, y1: number, x2: number, y2: number}, scene = "last"): Promise<string> {
+        needleRegion = JSON.parse(JSON.stringify(needleRegion));
+        needleRegion.x1 = Math.floor(needleRegion.x1 * this.xScale);
+        needleRegion.y1 = Math.floor(needleRegion.y1 * this.yScale);
+        needleRegion.x2 = Math.floor(needleRegion.x2 * this.xScale);
+        needleRegion.y2 = Math.floor(needleRegion.y2 * this.yScale);
+
         let wordsInRegion = [];
         for (let region of this.ocr[scene].regions) {
             for (let line of region.lines) {
@@ -141,11 +152,13 @@ export class Automator {
                     if (word.text != text) continue;
 
                     let boundingBox = word.boundingBox.split(','); // x1,y1,x2,y2
+                    // We need to multiply to match the designed for resolution
+                    // is that 1 over?
                     return {
-                        x1: parseInt(boundingBox[0]),
-                        y1: parseInt(boundingBox[1]),
-                        x2: parseInt(boundingBox[0])+parseInt(boundingBox[2]),
-                        y2: parseInt(boundingBox[1])+parseInt(boundingBox[3]),
+                        x1: Math.floor(parseInt(boundingBox[0]) * this.xScale),
+                        y1: Math.floor(parseInt(boundingBox[1]) * this.yScale),
+                        x2: Math.floor(parseInt(boundingBox[0]) + parseInt(boundingBox[2]) * this.xScale),
+                        y2: Math.floor(parseInt(boundingBox[1]) + parseInt(boundingBox[3]) * this.yScale),
                     }
                 }
             }

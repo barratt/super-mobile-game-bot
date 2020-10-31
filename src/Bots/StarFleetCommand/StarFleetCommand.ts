@@ -1,7 +1,9 @@
-import { BridgeInterface } from "../lib/Bridges/BridgeInterface";
-import { BotInterface } from "./BotInterface";
+import { BridgeInterface } from "../../lib/Bridges/BridgeInterface";
+import { BotInterface } from "../BotInterface";
 import sleep from "await-sleep";
-import { Automator } from "../Automator";
+import { Automator } from "../../Automator";
+
+import resolutions from "./resolutions";
 
 // TODO: Remove screen resolution dependency 
 export class StarFleetCommandBot extends Automator implements BotInterface {
@@ -13,44 +15,16 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
 
     bridge: BridgeInterface;
 
+    // Sadly the scaling doesn't work too well on this game :(
     // Designed on a Pixel 2 XL
-    locations = {
-        TOP_LEFT_BACK: [ 100, 75 ],
-        REFINERY: [ 850, 300 ],
-        BOTTOM_CENTER_DONE: [ 1500, 1300 ],
-
-        REFINERY_GRADE_2_CRYSTAL: [ 360, 1130 ],
-        REFINERY_GRADE_2_GAS: [ 1100, 1130 ],
-        REFINERY_GRADE_2_ORE: [ 1800, 1130 ],
-        REFINERY_MATERIALS_1CHEST: [ 1200, 1300 ],
-
-        ALLIANCE_HELP: [ 2500, 500 ],
-        ALLIANCE_HELP_ALL: [ 1500, 1350 ],
-
-        MISSION_SHORTCUT: [ 707, 1038 ],
-
-        INTERIOR_BUTTON: [ 2500, 1300 ],
-        INTRO_PROMO_CLOSE: [ 2500, 270 ]
-    }
-
-    regions = {
-        PLAYER_SCORE_BOUNDING_BOX: { x1: 300, y1: 20, x2: 700, y2: 100 },
-        REFINERY_NOTIFICATION_BOUNDING_BOX: { x1: 700, y1: 230, x2: 760, y2: 290 },
-        REFINERY_LABEL_BOUNDING_BOX: { x1: 770, y1: 365, x2: 950, y2: 420 },
-        ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX: { x1: 2560, y1: 395, x2: 2615, y2: 550 },
-    }
-
-    colourPoints = {
-        ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 15 } ],
-        MISSION_READY: [ { x: 707, y: 1038, r: 24, g: 164, b: 32, tolerance: 15 } ],
-        INTRO_PROMO_CLOSE: [ { x: 2466, y: 238, r: 220, g: 55, b: 55, tolerance: 15 }, { x: 2497, y: 268, r: 255, g: 212, b: 204, tolerance: 10 } ]
-    }
+    locations: any;
+    regions: any;
+    colourPoints: any;
 
     scenes = {
         MAIN_VIEW: "main",
         GIFTS_VIEW: "gifts",
     }
-
     designedFor = { width: 2880, height: 1440 };
 
     constructor(bridge: BridgeInterface) {
@@ -62,13 +36,32 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         console.log("StarFleet command bot start action");
 
         console.log("Initializing bot")
-        await this.init();
+        // Should we initialize with scaling?
+        let deviceSize = await this.bridge.screenResolution();
+        let resolution = `${deviceSize.width}x${deviceSize.height}`;
+
+        this.locations      = resolutions[resolution].locations;
+        this.regions        = resolutions[resolution].regions;
+        this.colourPoints   = resolutions[resolution].colourPoints;
+        this.scenes         = resolutions[resolution].scenes;
+
+        // TODO Scale based on a different aspect ratio?
+        // If we support this resolution then use specific co-ordinates, otherwise use scaling.
+        if (resolutions[resolution]) {
+            console.log("Screen resolution supported, happy botting!");
+            await this.init(false);
+
+        } else {
+            console.log("WARNING: This bot has not been optimized for your device resolution! Trying to use scaling.");
+            await this.init(true);
+        }
+
         console.log("Bot ready");
 
         this.keepScreenAwake();
         
         console.log("Finding main screen"); 
-        await sleep(4000); // It at least takes 4 seconds for it to begin loading.
+        await sleep(5000); // It at least takes 4 seconds for it to begin loading.
 
         const maxAttempts = 5;
         let checkOnScreen = maxAttempts;
@@ -90,7 +83,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             // We're not. Lets wait.
             checkOnScreen--;
             console.log(`Home screen not detected, waiting (Attempt ${maxAttempts-checkOnScreen}/${maxAttempts})`)
-            await sleep(4000);
+            await sleep(5000);
             // isOn
         }
 
@@ -223,6 +216,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         // Wait until we can see it? That takes screenshot service which costs!
         await sleep(2000);
         
+        // TODO: Refactor this to be slower for lower speed devices
         await this.swipe(1850, 620, 1100, 620, 250); // The current qame has 2 promo packs
 
         await sleep(2000);
@@ -232,17 +226,11 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await this.takeScreenshot(this.scenes.GIFTS_VIEW);
         await this.runOcr(this.scenes.GIFTS_VIEW);
 
-        const chests = {
-            "MIN10": { x1: 500, y1: 1070, x2: 950, y2: 1180 }, // Green claim button or available in
-            "HOUR4": { x1: 1170, y1: 1070, x2: 1700, y2: 1180 },
-            "HOUR24": { x1: 1870, y1: 1070, x2: 2400, y2: 1180 },
-        }
-
-        let min10Text = await this.findTextInRegion(chests.MIN10, this.scenes.GIFTS_VIEW);
+        let min10Text = await this.findTextInRegion(this.regions.chests.MIN10, this.scenes.GIFTS_VIEW);
 
         if (min10Text == "CLAIM") {
             console.log("Claiming 10 minute chest");
-            await this.tapLocation([ (chests.MIN10.x1 + chests.MIN10.x2) / 2, (chests.MIN10.y1 + chests.MIN10.y2) / 2 ]);
+            await this.tapLocation([ (this.regions.chests.MIN10.x1 + this.regions.chests.MIN10.x2) / 2, (this.regions.chests.MIN10.y1 + this.regions.chests.MIN10.y2) / 2 ]);
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
             await sleep(2000);
@@ -251,10 +239,10 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         }
 
         // This returns us back to the gifts screen, lets swipe and check for 4h
-        let hour4Text = await this.findTextInRegion(chests.HOUR4, this.scenes.GIFTS_VIEW);
+        let hour4Text = await this.findTextInRegion(this.regions.chests.HOUR4, this.scenes.GIFTS_VIEW);
         if (hour4Text == "CLAIM") {
             console.log("Claiming 4 hour chest");
-            await this.tapLocation([ (chests.HOUR4.x1 + chests.HOUR4.x2) / 2, (chests.HOUR4.y1 + chests.HOUR4.y2) / 2 ]);
+            await this.tapLocation([ (this.regions.chests.HOUR4.x1 + this.regions.chests.HOUR4.x2) / 2, (this.regions.chests.HOUR4.y1 + this.regions.chests.HOUR4.y2) / 2 ]);
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
             await sleep(2000);
@@ -262,10 +250,10 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             console.log("4h chest not available");
         }
 
-        let hour24Text = await this.findTextInRegion(chests.HOUR24, this.scenes.GIFTS_VIEW);
+        let hour24Text = await this.findTextInRegion(this.regions.chests.HOUR24, this.scenes.GIFTS_VIEW);
         if (hour24Text == "CLAIM") {
             console.log("Claiming 24 hour chest");
-            await this.tapLocation([ (chests.HOUR24.x1 + chests.HOUR24.x2) / 2, (chests.HOUR24.y1 + chests.HOUR24.y2) / 2 ]);
+            await this.tapLocation([ (this.regions.chests.HOUR24.x1 + this.regions.chests.HOUR24.x2) / 2, (this.regions.chests.HOUR24.y1 + this.regions.chests.HOUR24.y2) / 2 ]);
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
             await sleep(2000);
