@@ -146,6 +146,18 @@ export class Automator {
     }
 
     async findRegionForText(text: string, scene = "last"): Promise<Region> {
+        let found = await this.findRegionsForText(text, scene);
+
+        if (found.length > 0) {
+            return found[0];
+        }
+        
+        return null;
+    }
+
+    async findRegionsForText(text: string, scene = "last"): Promise<Array<Region>> {
+        let regionsFound = [];
+
         for (let region of this.ocr[scene].regions) {
             for (let line of region.lines) {
                 for (let word of line.words) {
@@ -154,17 +166,17 @@ export class Automator {
                     let boundingBox = word.boundingBox.split(','); // x1,y1,x2,y2
                     // We need to multiply to match the designed for resolution
                     // is that 1 over?
-                    return {
+                    regionsFound.push({
                         x1: Math.floor(parseInt(boundingBox[0]) * this.xScale),
                         y1: Math.floor(parseInt(boundingBox[1]) * this.yScale),
                         x2: Math.floor(parseInt(boundingBox[0]) + parseInt(boundingBox[2]) * this.xScale),
                         y2: Math.floor(parseInt(boundingBox[1]) + parseInt(boundingBox[3]) * this.yScale),
-                    }
+                    });
                 }
             }
         }
 
-        return null;
+        return regionsFound;
     }
 
     // Returns array of matched

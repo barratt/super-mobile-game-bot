@@ -29,6 +29,7 @@ export class ADB implements BridgeInterface {
     async swipe(xStart, yStart, xStop, yStop, durationMs): Promise<boolean> {
 
         console.log(`Swiping (${xStart}, ${yStart})`);
+        console.log(`adb shell input touchscreen swipe ${xStart} ${yStart} ${xStop} ${yStop} ${durationMs}`)
         await this.client.shell(`input touchscreen swipe ${xStart} ${yStart} ${xStop} ${yStop} ${durationMs}`);
         await sleep(durationMs + 100);
 

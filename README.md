@@ -24,6 +24,8 @@ TODO
 - Create more bots
 - Speed up screenshot time for ADB bridge
 - Allow ADB bridge to connect to the device itself
+- Implement winston logging levels
+- Implement a GUI 
 
 Notes
 ----
@@ -47,8 +49,8 @@ Currently the only bot is Starfleet command for Android. Each bot can choose to 
 Features:
 - Starts refinery
 - Collects gifts
+- Alliance help
 
 Coming soon:
 - Statistic reporting
-- Alliance help
 - 

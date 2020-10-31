@@ -43,7 +43,6 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         this.locations      = resolutions[resolution].locations;
         this.regions        = resolutions[resolution].regions;
         this.colourPoints   = resolutions[resolution].colourPoints;
-        this.scenes         = resolutions[resolution].scenes;
 
         // TODO Scale based on a different aspect ratio?
         // If we support this resolution then use specific co-ordinates, otherwise use scaling.
@@ -217,7 +216,12 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await sleep(2000);
         
         // TODO: Refactor this to be slower for lower speed devices
-        await this.swipe(1850, 620, 1100, 620, 250); // The current qame has 2 promo packs
+        // Slides 3/4 of the screen
+        await this.swipe(
+            (this.currentScreenSize.width/10) * 8, 
+            this.currentScreenSize.height/2, 
+            (this.currentScreenSize.width/10) * 4, 
+            this.currentScreenSize.height/2, 5000); 
 
         await sleep(2000);
         console.log("Taking screenshot of gifts screen");
@@ -226,39 +230,23 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await this.takeScreenshot(this.scenes.GIFTS_VIEW);
         await this.runOcr(this.scenes.GIFTS_VIEW);
 
-        let min10Text = await this.findTextInRegion(this.regions.chests.MIN10, this.scenes.GIFTS_VIEW);
+        let claimableChests = await this.findRegionsForText("CLAIM", this.scenes.GIFTS_VIEW);
 
-        if (min10Text == "CLAIM") {
-            console.log("Claiming 10 minute chest");
-            await this.tapLocation([ (this.regions.chests.MIN10.x1 + this.regions.chests.MIN10.x2) / 2, (this.regions.chests.MIN10.y1 + this.regions.chests.MIN10.y2) / 2 ]);
+        for (let chest of claimableChests) {
+            console.log("Claiming chest");
+
+            await this.tapLocation([ Math.floor((chest.x1 + chest.x2)/2), Math.floor((chest.y1 + chest.y2) / 2) ]);
             await sleep(2000);
             await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
+            // Swipe back into position for the next one.
+            await this.swipe(
+                (this.currentScreenSize.width/10) * 8, 
+                this.currentScreenSize.height/2, 
+                (this.currentScreenSize.width/10) * 4, 
+                this.currentScreenSize.height/2, 
+                5000
+            ); 
             await sleep(2000);
-        } else {
-            console.log("10 min chest not available");
-        }
-
-        // This returns us back to the gifts screen, lets swipe and check for 4h
-        let hour4Text = await this.findTextInRegion(this.regions.chests.HOUR4, this.scenes.GIFTS_VIEW);
-        if (hour4Text == "CLAIM") {
-            console.log("Claiming 4 hour chest");
-            await this.tapLocation([ (this.regions.chests.HOUR4.x1 + this.regions.chests.HOUR4.x2) / 2, (this.regions.chests.HOUR4.y1 + this.regions.chests.HOUR4.y2) / 2 ]);
-            await sleep(2000);
-            await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
-            await sleep(2000);
-        } else {
-            console.log("4h chest not available");
-        }
-
-        let hour24Text = await this.findTextInRegion(this.regions.chests.HOUR24, this.scenes.GIFTS_VIEW);
-        if (hour24Text == "CLAIM") {
-            console.log("Claiming 24 hour chest");
-            await this.tapLocation([ (this.regions.chests.HOUR24.x1 + this.regions.chests.HOUR24.x2) / 2, (this.regions.chests.HOUR24.y1 + this.regions.chests.HOUR24.y2) / 2 ]);
-            await sleep(2000);
-            await this.tapLocation(this.locations.BOTTOM_CENTER_DONE);
-            await sleep(2000);
-        } else {
-            console.log("24h chest not available");
         }
 
         await this.tapLocation(this.locations.TOP_LEFT_BACK);
