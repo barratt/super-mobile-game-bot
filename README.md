@@ -1,7 +1,7 @@
 # Super Mobile Game Bot
 
 This bot is designed to automate any mobile game, both iOS and android, real device and emulator.
-It tries to use OCR and known coordinates. I'm trying to NOT use computer vision for reliability.
+It tries to use OCR and known coordinates. I'm trying to NOT use computer vision (In terms of AI/ML although I appreciate OCR is CV and its going to be hard to avoid) for reliability.
 
 How it works is as follows, there is a BotInterface which has to expose certain methods such as reportStatistics and start() stop(). There is also a BridgeInterface, this has to implement specific methods for mobile such as, getResolution, tap, swipe, takeScreenshot().
 
