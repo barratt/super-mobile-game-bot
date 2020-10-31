@@ -175,11 +175,15 @@ export class Automator {
             let pixelB = (pixels as any).get(point.x, point.y, 2);
             let pixelA = (pixels as any).get(point.x, point.y, 3);
 
-            console.log(`Got pixel: R: ${pixelR}, G:${pixelG}, B:${pixelB}, A:${pixelA}`);
+            let rDrift = Math.abs(pixelR - point.r);
+            let gDrift = Math.abs(pixelG - point.g);
+            let bDrift = Math.abs(pixelB - point.b);
+            
+            let rInTolerance = rDrift < (point.tolerance || 0);
+            let gInTolerance = gDrift < (point.tolerance || 0);
+            let bInTolerance = bDrift < (point.tolerance || 0);
 
-            let rInTolerance = (Math.abs(pixelR - point.r) < (point.tolerance || 0));
-            let gInTolerance = (Math.abs(pixelG - point.g) < (point.tolerance || 0));
-            let bInTolerance = (Math.abs(pixelB - point.b) < (point.tolerance || 0));
+            console.log(`Got pixel data (ACTUAL/EXPECTED/TOLERANCE/DRIFT): R: ${pixelR}/${point.r}/${point.tolerance}/${rDrift}  G: ${pixelG}/${point.g}/${point.tolerance}/${gDrift} B: ${pixelB}/${point.b}/${point.tolerance}/${bDrift} `);
 
             if (rInTolerance && bInTolerance && gInTolerance) {
                 matchedPixels.push(point);

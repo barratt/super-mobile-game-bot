@@ -41,9 +41,9 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
     }
 
     colourPoints = {
-        ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 10 } ],
-        MISSION_READY: [ { x: 707, y: 1038, r: 24, g: 164, b: 32, tolerance: 10 } ],
-        INTRO_PROMO_CLOSE: [ { x: 2466, y: 238, r: 220, g: 55, b: 55, tolerance: 10 }, { x: 2497, y: 268, r: 255, g: 212, b: 204, tolerance: 10 } ]
+        ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 15 } ],
+        MISSION_READY: [ { x: 707, y: 1038, r: 24, g: 164, b: 32, tolerance: 15 } ],
+        INTRO_PROMO_CLOSE: [ { x: 2466, y: 238, r: 220, g: 55, b: 55, tolerance: 15 }, { x: 2497, y: 268, r: 255, g: 212, b: 204, tolerance: 10 } ]
     }
 
     scenes = {
@@ -233,9 +233,9 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await this.runOcr(this.scenes.GIFTS_VIEW);
 
         const chests = {
-            "MIN10": { x1: 600, y1: 1080, x2: 900, y2: 1165 }, // Green claim button or available in
-            "HOUR4": { x1: 1030, y1: 1080, x2: 1600, y2: 1165 },
-            "HOUR24": { x1: 1700, y1: 1080, x2: 2300, y2: 1165 },
+            "MIN10": { x1: 500, y1: 1070, x2: 950, y2: 1180 }, // Green claim button or available in
+            "HOUR4": { x1: 1170, y1: 1070, x2: 1700, y2: 1180 },
+            "HOUR24": { x1: 1870, y1: 1070, x2: 2400, y2: 1180 },
         }
 
         let min10Text = await this.findTextInRegion(chests.MIN10, this.scenes.GIFTS_VIEW);
