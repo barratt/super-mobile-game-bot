@@ -19,7 +19,7 @@ export class ADB implements BridgeInterface {
         this.client = await AppiumADB.createADB();
         // console.log("Connecting");
         // await this.client.adbExec([`connect ${this.deviceId}`])
-        // console.log("calling reconnect")
+        // console.log("calling reconnect") 
         // await this.client.reconnect('device');
         console.log("Setting device id")
         await this.client.setDeviceId(this.deviceId);
@@ -119,5 +119,10 @@ export class ADB implements BridgeInterface {
         // This assumes portrait mode.
         // I'm inverting this for now because we assume its always landscape.
         return { width: screenSize[1], height: screenSize[0] };
+    }
+
+    async wakeScreen(): Promise<boolean> {
+        await this.client.shell(`input keyevent mouse`);
+        return true;
     }
 }

@@ -26,6 +26,8 @@ export class Automator {
     xScale: number;
     yScale: number;
 
+    screenWakeTimer;
+
     constructor(bridge) {
         this.bridge = bridge;
 
@@ -185,5 +187,20 @@ export class Automator {
         }
 
         return matchedPixels;
+    }
+
+    async keepScreenAwake() {
+        if (this.screenWakeTimer) return;
+
+        this.screenWakeTimer = setInterval((bridge) => {
+            bridge.wakeScreen();
+        }, 3000, this.bridge);
+    }
+
+    async stopKeepingScreenAwake() {
+        if (!this.screenWakeTimer) return;
+
+        clearInterval(this.screenWakeTimer);
+        this.screenWakeTimer = null;
     }
 }

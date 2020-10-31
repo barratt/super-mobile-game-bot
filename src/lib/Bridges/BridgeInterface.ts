@@ -11,4 +11,6 @@ export interface BridgeInterface {
     takeScreenshot(): Promise<Buffer>;
     tap(x: number, y: number);
     swipe(xStart: number, yStart: number, xStop: number, yStop: number, durationMs: number);
+
+    wakeScreen(): Promise<boolean>;
 }

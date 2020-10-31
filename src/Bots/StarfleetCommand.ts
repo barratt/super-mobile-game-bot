@@ -29,7 +29,8 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
 
         MISSION_SHORTCUT: [ 707, 1038 ],
 
-        INTERIOR_BUTTON: [ 2500, 1300 ]
+        INTERIOR_BUTTON: [ 2500, 1300 ],
+        INTRO_PROMO_CLOSE: [ 2500, 270 ]
     }
 
     regions = {
@@ -42,6 +43,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
     colourPoints = {
         ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 10 } ],
         MISSION_READY: [ { x: 707, y: 1038, r: 24, g: 164, b: 32, tolerance: 10 } ],
+        INTRO_PROMO_CLOSE: [ { x: 2466, y: 238, r: 220, g: 55, b: 55, tolerance: 10 }, { x: 2497, y: 268, r: 255, g: 212, b: 204, tolerance: 10 } ]
     }
 
     scenes = {
@@ -62,6 +64,8 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         console.log("Initializing bot")
         await this.init();
         console.log("Bot ready");
+
+        this.keepScreenAwake();
         
         console.log("Finding main screen"); 
         await sleep(4000); // It at least takes 4 seconds for it to begin loading.
@@ -70,9 +74,10 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         let checkOnScreen = maxAttempts;
         while (checkOnScreen > 0) {
             // Lets see whats happening.
-            
             await this.takeScreenshot("main");
             // this.lastScreenshot = require('fs').readFileSync('../research/android_scripts/screen2.png');
+
+            await this.skipIntroPromo(); // We try to skip an intro promo if we can see it 
     
             // Run the OCR on the last screenshot 
             await this.runOcr("main");
@@ -101,6 +106,8 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await this.redeemActiveMission();
         await this.getPlayerScore();
 
+        this.stopKeepingScreenAwake();
+        
         return true;
     }
 
@@ -299,6 +306,17 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
     }
 
     async skipIntroPromo() {
-        // TODO: 
+        let matched = await this.checkRGBColoursForPoints(this.colourPoints.INTRO_PROMO_CLOSE, this.scenes.MAIN_VIEW);
+
+        if (matched.length < this.colourPoints.MISSION_READY.length) {
+            console.log("No promo!");
+            return;
+        }
+        
+        console.log("Closing promo window");
+
+        await this.tapLocation(this.locations.INTRO_PROMO_CLOSE);
+        await sleep(1000);
+
     }
 }
