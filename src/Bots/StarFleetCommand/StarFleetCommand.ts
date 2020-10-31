@@ -95,7 +95,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await this.claimGifts();
         await this.startRefinery();
         await this.helpAlliance();
-        await this.redeemActiveMission();
+        await this.redeemCollectables();
         await this.getPlayerScore();
 
         this.stopKeepingScreenAwake();
@@ -255,18 +255,38 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         // Now we can select claim on the others?
     }
 
-    async redeemActiveMission() {
-        let matched = await this.checkRGBColoursForPoints(this.colourPoints.MISSION_READY, this.scenes.MAIN_VIEW);
+    async redeemCollectables() {
+        // TODO: Claiming certain missions / rewards can trigger screens such as followup mission dialog. Fix these
 
-        if (matched.length < this.colourPoints.MISSION_READY.length) {
-            console.log("Mission not ready!");
+        // Claim Mission Rewards
+        let missionMatches = await this.checkRGBColoursForPoints(this.colourPoints.MISSION_READY, this.scenes.MAIN_VIEW);
+        if (missionMatches.length == this.colourPoints.MISSION_READY.length) {
+            console.log("Accepting mission ready");
+            await this.tapLocation([ missionMatches[0].x, missionMatches[0].y ]);
             return;
-        }
+        } else console.log("No mission ready detected");
 
-        console.log("Accepting mission ready");
-        await this.tapLocation(this.locations.MISSION_SHORTCUT);
-        await sleep(1000);
-        console.log("Accepted mission");
+        await sleep(250);
+
+        // Claim Building Rewards
+        let buildingMatches = await this.checkRGBColoursForPoints(this.colourPoints.BUILDING_READY, this.scenes.MAIN_VIEW);
+        if (buildingMatches.length == this.colourPoints.BUILDING_READY.length) {
+            console.log("Accepting building ready");
+            await this.tapLocation([ buildingMatches[0].x, buildingMatches[0].y ]);
+            return;
+        } else console.log("No building ready detected");
+
+        await sleep(250);
+
+        // Claim Research Rewards
+        let researchMatches = await this.checkRGBColoursForPoints(this.colourPoints.RESEARCH_READY, this.scenes.MAIN_VIEW);
+        if (researchMatches.length == this.colourPoints.RESEARCH_READY.length) {
+            console.log("Accepting research ready");
+            await this.tapLocation([ researchMatches[0].x, researchMatches[0].y ]);
+            return;
+        } else console.log("No research ready detected");
+
+        await sleep(250);
     }
 
     async collectGenerators() {

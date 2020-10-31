@@ -14,8 +14,6 @@ interface StarFleetCommandResolutionInterface {
         ALLIANCE_HELP: Array<number>;
         ALLIANCE_HELP_ALL: Array<number>;
 
-        MISSION_SHORTCUT: Array<number>;
-
         INTERIOR_BUTTON: Array<number>;
         INTRO_PROMO_CLOSE: Array<number>;
     }
@@ -24,17 +22,13 @@ interface StarFleetCommandResolutionInterface {
         REFINERY_NOTIFICATION_BOUNDING_BOX: Region;
         REFINERY_LABEL_BOUNDING_BOX: Region;
         ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX: Region;
-    
-        chests: {
-            MIN10: Region;
-            HOUR4: Region;
-            HOUR24: Region;
-        }
     }
     colourPoints: {
         ALLIANCE_HELP: Array<ColourPoint>;
         MISSION_READY: Array<ColourPoint>;
         INTRO_PROMO_CLOSE: Array<ColourPoint>;
+        BUILDING_READY: Array<ColourPoint>;
+        RESEARCH_READY: Array<ColourPoint>;
     }
 }
 interface StarFleetCommandResolutionsInterface {
@@ -57,8 +51,6 @@ resolutions["2880x1440"] = {
         ALLIANCE_HELP: [ 2500, 500 ],
         ALLIANCE_HELP_ALL: [ 1500, 1350 ],
 
-        MISSION_SHORTCUT: [ 707, 1038 ],
-
         INTERIOR_BUTTON: [ 2500, 1300 ],
         INTRO_PROMO_CLOSE: [ 2500, 270 ]
     },
@@ -67,16 +59,12 @@ resolutions["2880x1440"] = {
         REFINERY_NOTIFICATION_BOUNDING_BOX: { x1: 700, y1: 230, x2: 760, y2: 290 },
         REFINERY_LABEL_BOUNDING_BOX: { x1: 770, y1: 365, x2: 950, y2: 420 },
         ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX: { x1: 2560, y1: 395, x2: 2615, y2: 550 },
-    
-        chests: {
-            MIN10: { x1: 500, y1: 1070, x2: 950, y2: 1180 }, // Green claim button or available in
-            HOUR4: { x1: 1170, y1: 1070, x2: 1700, y2: 1180 },
-            HOUR24: { x1: 1870, y1: 1070, x2: 2400, y2: 1180 },
-        }
     },
     colourPoints: {
         ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 15 } ],
         MISSION_READY: [ { x: 707, y: 1038, r: 24, g: 164, b: 32, tolerance: 15 } ],
+        BUILDING_READY: [ { x: 630, y: 520, r: 24, g: 164, b: 32, tolerance: 15 } ],
+        RESEARCH_READY: [ { x: 630, y: 630, r: 24, g: 164, b: 32, tolerance: 15 } ],
         INTRO_PROMO_CLOSE: [ { x: 2466, y: 238, r: 220, g: 55, b: 55, tolerance: 15 }, { x: 2497, y: 268, r: 255, g: 212, b: 204, tolerance: 10 } ]
     },
 }
