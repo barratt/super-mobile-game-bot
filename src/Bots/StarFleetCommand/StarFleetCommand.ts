@@ -141,17 +141,15 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         let matched = await this.checkRGBColoursForPoints(this.colourPoints.ALLIANCE_HELP, this.scenes.MAIN_VIEW);
 
         if (matched.length < this.colourPoints.ALLIANCE_HELP.length) {
-            // No refinery today.
-            logger.info("Alliance doesn't need help!");
+            logger.debug("Alliance doesn't need help!");
             return;
-        } else {
-            logger.info("Alliance needs help!")
-        }
+        } 
+
+        logger.info("Alliance needs help!");
 
         await this.tapLocation(this.locations.ALLIANCE_HELP);
         await sleep(2000);
         await this.tapLocation(this.locations.ALLIANCE_HELP_ALL);
-        // logger.info(`Helped ${notification} people!`);
     }
 
     async startRefinery() {
@@ -166,11 +164,10 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             return;
         }
 
-        // Check if refinery is good to go.
-        let notification = await this.findTextInRegion(this.regions.REFINERY_NOTIFICATION_BOUNDING_BOX, this.scenes.MAIN_VIEW);
-        if (notification.length == 0) {
-            // No refinery today.
-            logger.info("Refinery already done!");
+        let matched = await this.checkRGBColoursForPoints(this.colourPoints.REFINERY_READY, this.scenes.MAIN_VIEW);
+
+        if (matched.length < this.colourPoints.REFINERY_READY.length) {
+            logger.debug("Alliance doesn't need help!");
             return;
         }
 

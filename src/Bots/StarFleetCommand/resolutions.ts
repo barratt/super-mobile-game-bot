@@ -19,7 +19,6 @@ interface StarFleetCommandResolutionInterface {
     }
     regions: {
         PLAYER_SCORE_BOUNDING_BOX: Region;
-        REFINERY_NOTIFICATION_BOUNDING_BOX: Region;
         REFINERY_LABEL_BOUNDING_BOX: Region;
         ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX: Region;
     }
@@ -29,6 +28,7 @@ interface StarFleetCommandResolutionInterface {
         INTRO_PROMO_CLOSE: Array<ColourPoint>;
         BUILDING_READY: Array<ColourPoint>;
         RESEARCH_READY: Array<ColourPoint>;
+        REFINERY_READY: Array<ColourPoint>;
     }
 }
 interface StarFleetCommandResolutionsInterface {
@@ -56,11 +56,11 @@ resolutions["2880x1440"] = {
     },
     regions: {
         PLAYER_SCORE_BOUNDING_BOX: { x1: 300, y1: 20, x2: 700, y2: 100 },
-        REFINERY_NOTIFICATION_BOUNDING_BOX: { x1: 700, y1: 230, x2: 760, y2: 290 },
         REFINERY_LABEL_BOUNDING_BOX: { x1: 770, y1: 365, x2: 950, y2: 420 },
         ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX: { x1: 2560, y1: 395, x2: 2615, y2: 550 },
     },
     colourPoints: {
+        REFINERY_READY: [ { x: 887, y: 246, r: 175, g: 43, b: 51, tolerance: 15 } ],
         ALLIANCE_HELP: [ { x: 2492, y: 448, r: 110, g: 95, b: 184, tolerance: 15 } ],
         MISSION_READY: [ { x: 707, y: 1038, r: 24, g: 164, b: 32, tolerance: 15 } ],
         BUILDING_READY: [ { x: 630, y: 520, r: 24, g: 164, b: 32, tolerance: 35 } ], // Tol 35 as the speed up could be available, which is equally as cool 
