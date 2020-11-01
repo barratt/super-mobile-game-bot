@@ -69,4 +69,36 @@ resolutions["2880x1440"] = {
     },
 }
 
+resolutions["1280x720"] = {
+    locations: {
+        TOP_LEFT_BACK: [ 50, 60 ],
+        REFINERY: [ 425, 240 ],
+        BOTTOM_CENTER_DONE: [ 750, 1040 ], //TODO: This doesn't work right?
+
+        REFINERY_GRADE_2_CRYSTAL: [ 180, 904 ],
+        REFINERY_GRADE_2_GAS: [ 550, 904 ],
+        REFINERY_GRADE_2_ORE: [ 900, 904 ],
+        REFINERY_MATERIALS_1CHEST: [ 600, 1040 ],
+
+        ALLIANCE_HELP: [ 1250, 400 ],
+        ALLIANCE_HELP_ALL: [ 750, 1080 ],
+
+        INTERIOR_BUTTON: [ 1250, 1040 ],
+        INTRO_PROMO_CLOSE: [ 1250, 216 ]
+    },
+    regions: {
+        PLAYER_SCORE_BOUNDING_BOX: { x1: 150, y1: 16, x2: 700, y2: 100 },
+        REFINERY_LABEL_BOUNDING_BOX: { x1: 385, y1: 292, x2: 950, y2: 420 },
+        ALLIANCE_HELP_NOTIFICATION_BOUNDING_BOX: { x1: 1280, y1: 316, x2: 1307, y2: 440 },
+    },
+    colourPoints: {
+        REFINERY_READY: [ { x: 443, y: 197, r: 175, g: 43, b: 51, tolerance: 15 } ],
+        ALLIANCE_HELP: [ { x: 1246, y: 358, r: 110, g: 95, b: 184, tolerance: 15 } ],
+        MISSION_READY: [ { x: 353, y: 830, r: 24, g: 164, b: 32, tolerance: 15 } ],
+        BUILDING_READY: [ { x: 315, y: 416, r: 24, g: 164, b: 32, tolerance: 35 } ], // Tol 35 as the speed up could be available, which is equally as cool 
+        RESEARCH_READY: [ { x: 315, y: 504, r: 24, g: 164, b: 32, tolerance: 35 } ], // Tol 30 as the speed up could be available, which is equally as cool 
+        INTRO_PROMO_CLOSE: [ { x: 1233, y: 190, r: 220, g: 55, b: 55, tolerance: 15 }, { x: 1248, y: 214, r: 255, g: 212, b: 204, tolerance: 10 } ]
+    },
+}
+
 export default resolutions;

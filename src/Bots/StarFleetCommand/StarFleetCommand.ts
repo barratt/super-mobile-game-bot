@@ -44,22 +44,23 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         logger.info("Initializing bot")
         // Should we initialize with scaling?
         let deviceSize = await this.bridge.screenResolution();
-        let resolution = `${deviceSize.width}x${deviceSize.height}`;
+        let resolution = `${Math.max(deviceSize.width, deviceSize.height)}x${Math.min(deviceSize.width, deviceSize.height)}`;
 
-        this.locations      = resolutions[resolution].locations;
-        this.regions        = resolutions[resolution].regions;
-        this.colourPoints   = resolutions[resolution].colourPoints;
-
-        // TODO Scale based on a different aspect ratio?
         // If we support this resolution then use specific co-ordinates, otherwise use scaling.
         if (resolutions[resolution]) {
             logger.info("Screen resolution supported, happy botting!");
             await this.init(false);
 
         } else {
-            logger.info("WARNING: This bot has not been optimized for your device resolution! Trying to use scaling.");
+            // TODO Select scaled based on a different aspect ratio / closet?
+            logger.info(`WARNING: This bot has not been optimized for your device resolution! (${resolution}) Trying to use scaling.`);
+            resolution = "2880x1440"
             await this.init(true);
         }
+
+        this.locations      = resolutions[resolution].locations;
+        this.regions        = resolutions[resolution].regions;
+        this.colourPoints   = resolutions[resolution].colourPoints;
 
         logger.info("Bot ready");
 
@@ -219,7 +220,7 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await sleep(2000);
         
         // TODO: Refactor this to be slower for lower speed devices
-        // Slides 3/4 of the screen
+        // TODO: This does not work for newer level players whereby they only have 10m 4h chests
         await this.swipe(
             (this.currentScreenSize.width/10) * 8,
             this.currentScreenSize.height/2,
