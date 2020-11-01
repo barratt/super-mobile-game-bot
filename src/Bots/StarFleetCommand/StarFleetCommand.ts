@@ -1,11 +1,15 @@
-import { BridgeInterface } from "../../lib/Bridges/BridgeInterface";
-import { BotInterface } from "../BotInterface";
+const fs = require('fs');
+import moment from "moment";
 import sleep from "await-sleep";
+
+import { BridgeInterface } from "../../lib/Bridges/BridgeInterface";
+import logger from "../../lib/winston";
+
+import { BotInterface } from "../BotInterface";
 import { Automator } from "../../Automator";
 
 import resolutions from "./resolutions";
 
-import logger from "../../lib/winston";
 
 // TODO: Remove screen resolution dependency 
 export class StarFleetCommandBot extends Automator implements BotInterface {
@@ -320,5 +324,17 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         await this.tapLocation(this.locations.INTRO_PROMO_CLOSE);
         await sleep(1000);
 
+    }
+
+    async takeScreenshot(scene) {
+        await super.takeScreenshot(scene);
+        const finalPath = process.cwd() + `/src/Bots/StarFleetCommand/debug/screenshot-${moment().unix()}-${scene}.png`;
+        fs.writeFileSync(finalPath, this.screenshots[scene]);
+    }
+
+    async runOcr(scene) {
+        await super.runOcr(scene);
+        const finalPath = process.cwd() + `/src/Bots/StarFleetCommand/debug/ocr-${moment().unix()}-${scene}.json`;
+        fs.writeFileSync(finalPath, JSON.stringify(this.ocr[scene], null, 4));
     }
 }
