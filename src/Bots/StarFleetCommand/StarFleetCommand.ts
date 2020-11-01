@@ -217,10 +217,12 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
         // TODO: Refactor this to be slower for lower speed devices
         // Slides 3/4 of the screen
         await this.swipe(
-            (this.currentScreenSize.width/10) * 8, 
+            (this.currentScreenSize.width/10) * 8,
+            this.currentScreenSize.height/2,
+            (this.currentScreenSize.width/10) * 4,
             this.currentScreenSize.height/2, 
-            (this.currentScreenSize.width/10) * 4, 
-            this.currentScreenSize.height/2, 5000); 
+            5000
+        ); 
 
         await sleep(2000);
         logger.info("Taking screenshot of gifts screen");
@@ -243,10 +245,10 @@ export class StarFleetCommandBot extends Automator implements BotInterface {
             if ((i+1) < claimableChests.length) {
                 // Swipe back into position for the next one.
                 await this.swipe(
-                    (this.currentScreenSize.width/10) * 8, 
-                    this.currentScreenSize.height/2, 
-                    (this.currentScreenSize.width/10) * 4, 
-                    this.currentScreenSize.height/2, 
+                    (this.currentScreenSize.width/10) * 8,
+                    this.currentScreenSize.height/2,
+                    (this.currentScreenSize.width/10) * 4,
+                    this.currentScreenSize.height/2,
                     5000
                 ); 
                 await sleep(2000);
